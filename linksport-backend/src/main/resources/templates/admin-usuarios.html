@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" xmlns:th="http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel - Usuarios Linksport</title>
+  
+  <!-- TU ENLACE OFICIAL QUE ACTIVA DE GOLPE BULMA -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+  
+  <!-- Conectamos la tipografía Poppins de tu marca -->
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Forzamos el centrado vertical y horizontal absoluto en el medio de la pantalla */
+    body {
+      font-family: 'Poppins', sans-serif !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Contenedor central grande y centrado -->
+  <div class="container" style="max-width: 950px; width: 100%;">
+    
+    <!-- Cuadro 'box' de Bulma con bordes redondeados y sombra premium -->
+    <div class="box p-0" style="border-radius: 16px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.08); border: none;">
+      
+      <!-- Cabecera con fondo amarillo corporativo -->
+      <div class="p-5 has-text-centered" style="background-color: #FBC02D;">
+        <h1 class="title is-4 has-text-dark m-0" style="font-weight: 700; letter-spacing: 0.05em;">
+          👤 REGISTRO DE USUARIOS EN ARRAYLIST
+        </h1>
+        <p class="subtitle is-7 has-text-dark mt-1 mb-0" style="font-weight: 500; opacity: 0.85;">
+          Segunda Entidad Obligatoria del Backend de Linksport
+        </p>
+      </div>
+
+      <!-- Cuerpo del panel con letras grandes y legibles -->
+      <div class="p-5">
+        
+        <div class="table-container mb-5">
+          <!-- Clases de Bulma que ahora sí funcionan: con bordes e intercalado gris -->
+          <table class="table is-bordered is-striped is-hoverable is-fullwidth m-0">
+            <thead>
+              <tr class="has-background-dark">
+                <th class="has-text-white has-text-centered py-3" style="width: 100px; font-size: 1rem;">ID Usuario</th>
+                <th class="has-text-white py-3" style="font-size: 1rem;">Nombre Completo</th>
+                <th class="has-text-white py-3" style="font-size: 1rem;">Correo Electrónico</th>
+                <th class="has-text-white has-text-centered py-3" style="width: 180px; font-size: 1rem;">Contraseña Credencial</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="u : ${usuarios}">
+                <td class="has-text-weight-bold has-text-centered py-3" style="vertical-align: middle; font-size: 1rem;" th:text="${u.id}">1</td>
+                <td class="has-text-weight-semibold py-3" style="vertical-align: middle; color: #363636; font-size: 1rem;" th:text="${u.nombre}">Admin Linksport</td>
+                <td class="py-3" style="vertical-align: middle; font-size: 1rem;" th:text="${u.correo}">admin@linksport.com</td>
+                <td class="has-text-grey has-text-weight-medium has-text-centered py-3" style="vertical-align: middle; font-size: 1rem;" th:text="${u.password}">123456</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Botón negro redondeado premium de Bulma corregido -->
+        <div class="has-text-centered pt-4" style="border-top: 1px solid #eeeeee;">
+          <a href="/" class="button is-dark is-rounded px-6 has-text-weight-bold" style="box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 0.95rem;">
+            ← Volver a la Tienda
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
+

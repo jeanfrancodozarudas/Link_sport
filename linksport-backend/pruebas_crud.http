@@ -1,0 +1,26 @@
+### 1. PROBAR INGRESO DE NUEVA PRENDA DEPORTIVA (MÉTODO POST)
+POST http://localhost:8080/api/productos
+Content-Type: application/json
+
+{
+    "nombre": "Short de Training Ultra Linksport",
+    "precio": 85.00,
+    "imagenSrc": "imagenes/producto2.jpg"
+}
+
+###
+
+### 2. PROBAR EDICIÓN DE UN PRODUCTO EXISTENTE (MÉTODO PUT)
+PUT http://localhost:8080/api/productos/2
+Content-Type: application/json
+
+{
+    "nombre": "Pantalón Jogger Training Fit MODIFICADO",
+    "precio": 140.00,
+    "imagenSrc": "imagenes/jean.jpg"
+}
+
+###
+
+### 3. PROBAR ELIMINACIÓN DE UN PRODUCTO (MÉTODO DELETE)
+DELETE http://localhost:8080/api/productos/6

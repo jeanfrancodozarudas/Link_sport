@@ -1,0 +1,274 @@
+/* ==========================================================================
+   1. CONFIGURACIÓN DE TIPOGRAFÍA GLOBAL (ESTILO MODA E-COMMERCE)
+   ========================================================================== */
+html, body, button, input, select, textarea, .title, .subtitle {
+  font-family: 'Poppins', sans-serif !important;
+  letter-spacing: -0.02em; /* Letras sutilmente más elegantes y compactas */
+}
+
+/* Espaciado premium para títulos corporativos y logotipos */
+.tracking-wide {
+  letter-spacing: 0.05em !important; 
+}
+
+/* Clases de control estructural e inyecciones de fuerza */
+.w-100 { width: 100% !important; }
+.m-0 { margin: 0 !important; }
+.flex-wrap { flex-wrap: wrap !important; }
+.flex-grow-0 { flex-grow: 0 !important; }
+
+/* ==========================================================================
+   1. CONFIGURACIÓN DE TIPOGRAFÍA GLOBAL (ESTILO MODA E-COMMERCE)
+   ========================================================================== */
+html, body, button, input, select, textarea, .title, .subtitle {
+  font-family: 'Poppins', sans-serif !important;
+  letter-spacing: -0.02em; /* Letras sutilmente más elegantes y compactas */
+}
+
+/* Espaciado premium para títulos corporativos y logotipos */
+.tracking-wide {
+  letter-spacing: 0.05em !important; 
+}
+
+/* Clases de control estructural e inyecciones de fuerza */
+.w-100 { width: 100% !important; }
+.m-0 { margin: 0 !important; }
+.flex-wrap { flex-wrap: wrap !important; }
+.flex-grow-0 { flex-grow: 0 !important; }
+.is-flex { display: flex !important; }
+
+/* ==========================================================================
+   2. ESTILOS DE MARCA (BARRA AMARILLA Y CAROUSEL)
+   ========================================================================== */
+/* Color amarillo oficial de tu cabecera "Link Moda" */
+.bg-yellow-brand { 
+  background-color: #FBC02D !important; 
+}
+
+/* Contenedor del banner principal (Carrusel) con esquinas redondeadas */
+.hero-banner {
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+}
+
+/* ==========================================================================
+   3. CSS CONTROLADO PARA MENÚ RESPONSIVO (MÓVIL Y ESCRITORIO)
+   ========================================================================== */
+
+/* Efecto hover: cambia las letras a amarillo al pasar el cursor en el menú */
+.text-hover-yellow:hover {
+  color: #FBC02D !important;
+  background-color: transparent !important;
+}
+
+/* Estilos de color para las sub-opciones de Prendas (Mujer, Hombre, Niños) */
+.navbar-dropdown .navbar-item:hover {
+  background-color: #FFF9C4 !important; /* Fondo amarillo pastel sutil */
+  color: #FBC02D !important;            /* Texto en amarillo de marca */
+}
+
+/* --- CONFIGURACIÓN PARA COMPUTADORAS (PANTALLAS GRANDES) --- */
+@media screen and (min-width: 1024px) {
+  .nav-menu-estilo {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    box-shadow: none !important;
+  }
+  .nav-enlaces-contenedor {
+    margin: 0 auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+}
+
+/* --- CONFIGURACIÓN PARA CELULARES (CORRECCIÓN DE TRANSPARENCIA Y DESORDEN) --- */
+@media screen and (max-width: 1023px) {
+  .navbar-menu.is-active {
+    display: block !important;
+    background-color: #ffffff !important; /* Fondo blanco totalmente opaco */
+    position: absolute !important;        /* Flota sobre el carrusel sin empujarlo */
+    top: 100%;
+    left: 0;
+    width: 100% !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1) !important; /* Sombra elegante abajo */
+    z-index: 500 !important;              /* Se posiciona por encima de las fotos */
+    padding: 1rem !important;
+  }
+
+  /* Asegura que los enlaces se alineen verticalmente en celular */
+  .nav-enlaces-contenedor {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .navbar-menu .navbar-item {
+    padding: 0.75rem 1rem !important;
+    color: #1a1a1a !important;
+  }
+}
+
+/* Corrección técnica para las flechas del menú desplegable */
+.navbar-link:not(.is-arrowless)::after {
+  border-color: #4a4a4a !important;
+}
+.navbar-link:not(.is-arrowless):hover::after {
+  border-color: #FBC02D !important;
+}
+
+/* ==========================================================================
+   4. PANEL LATERAL DEL CARRITO DE COMPRAS (SIDEBAR)
+   ========================================================================== */
+.carrito-panel {
+  position: fixed;
+  top: 0;
+  right: -400px; /* Esconde el panel fuera de la pantalla por defecto */
+  width: 100%;
+  max-width: 400px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.4s ease-in-out;
+}
+
+.carrito-panel.is-active {
+  right: 0;
+}
+
+.carrito-header {
+  background-color: #FBC02D;
+  color: #1a1a1a;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.carrito-footer {
+  margin-top: auto;
+  border-top: 1px solid #f0f0f0;
+  background-color: #fafafa;
+  padding: 1.5rem !important;
+}
+
+.carrito-overlay-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  display: none;
+}
+
+.carrito-overlay-bg.is-active {
+  display: block;
+}
+
+.carrito-item-box {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  position: relative;
+}
+
+.carrito-item-img {
+  width: 60px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.btn-cantidad-control {
+  border: 1px solid #dbdbdb;
+  background-color: #fff;
+  cursor: pointer;
+  padding: 2px 8px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.btn-cantidad-control:hover {
+  background-color: #f5f5f5;
+}
+
+/* ==========================================================================
+   5. COLOR PARA LAS CELDAS DE LA CABECERA DE LA TABLA
+   ========================================================================== */
+.tabla-cabecera-color th {
+  background-color: #FBC02D !important; /* Fuerza el amarillo de tu marca */
+  color: #1a1a1a !important;            /* Letras en negro oscuro */
+}
+
+/* ==========================================================================
+   6. INTERACTIVIDAD DE LA SECCIÓN DE BENEFICIOS (HOVER)
+   ========================================================================== */
+span.beneficio-icono {
+  color: #FBC02D !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease-in-out !important; /* Suaviza el cambio de color */
+}
+
+span.beneficio-icono:hover, 
+span.beneficio-icono:hover i {
+  color: #E65100 !important; /* Tono naranja oscuro intenso */
+}
+
+/* ==========================================================================
+   7. ANIMACIÓN PARA LAS IMÁGENES DE LOS PRODUCTOS
+   ========================================================================== */
+.producto-imagen {
+  transition: transform 0.4s ease-in-out, filter 0.4s ease-in-out !important; 
+  cursor: pointer;
+}
+
+.producto-imagen:hover {
+  transform: scale(1.06);           /* Agranda la imagen un 6% de forma fluida */
+  filter: brightness(1.05);         /* Ligero toque de brillo/luz */
+}
+
+/* ==========================================================================
+   8. RESPONSIVE DESIGN INTERNO (OPTIMIZACIONES PARA CELULARES - MAX 768PX)
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  .level.is-mobile { 
+    display: block !important;       
+    width: 100% !important;          
+    box-sizing: border-box !important;
+  }
+
+  .level-item.mb-mobile-2 {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0.5rem 0 0 0 !important;
+  }
+
+  .level-item .field.has-addons {
+    width: 100% !important;
+    display: flex !important;
+  }
+
+  .level-left {
+    text-align: center;
+    width: 100%;
+    display: block;
+  }
+
+  .mb-mobile-4 {
+    margin-bottom: 2rem !important;
+  }
+
+  .flex-mobile-icons { 
+    display: flex !important; 
+    align-items: center; 
+  }
+
+    /* Reduce el texto y los espacios internos de la tabla en celulares */
+  .table th, .table td {
+    font-size: 0.70rem !important; /* Letra más pequeña para que entre más contenido */
+    padding: 0.4rem 0.3rem !important; /* Reduce los márgenes internos de cada celda */
+  }
+
+}

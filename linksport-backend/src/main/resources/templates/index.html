@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPORT Moda - Tu Tienda de Ropa deportiva</title>
+  <!-- Enlace oficial a Bulma CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+  <!-- Iconos de FontAwesome para el buscador, carrito y beneficios -->
+  <link rel="stylesheet" href="https://cloudflare.com">
+  <link rel="stylesheet" th:href="@{/CSS/styles.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Enlace oficial de Google Fonts (Tipografía Poppins) -->
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,900&display=swap"
+    rel="stylesheet">
+  <html lang="es" data-theme="light" xmlns:th="http://thymeleaf.org">
+
+
+</head>
+
+<body>
+
+  
+  <header class="shadow-sm">
+
+    <!-- NIVEL 1: BARRA COMERCIAL AMARILLA  -->
+    <div class="bg-yellow-brand py-3 px-5">
+      <div class="container">
+        <!-- El flex con 'is-justify-content-between' empuja el logo a la izquierda, los iconos a la derecha y el buscador al centro -->
+        <div class="is-flex is-justify-content-between is-align-items-center w-100"
+          style="display: flex !important; justify-content: space-between !important; align-items: center !important; width: 100% !important;">
+
+          <!-- 1. Logo (Izquierda) -->
+          <div class="flex-grow-0" style="flex-grow: 0 !important; flex-shrink: 0 !important;">
+            <h1 class="title is-4 has-text-weight-bold tracking-wide has-text-dark m-0">LINK SPORT</h1>
+          </div>
+
+          <!-- 2. Buscador Central (Estirado de forma simétrica) -->
+          <div style="flex-grow: 1; max-width: 550px; margin: 0 2rem; width: 100%;">
+            <div class="field has-addons m-0 w-100">
+              <div class="control is-expanded">
+                <input class="input is-rounded border-0 py-4" type="text"
+                  placeholder="¿Qué ropa deportiva estás buscando?">
+              </div>
+              <div class="control">
+                <button class="button is-dark is-rounded">
+                  <span class="icon"><i class="fas fa-search"></i></span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Contenedor de Íconos (Derecha - Juntos al extremo) -->
+          <div class="is-flex is-align-items-center flex-grow-0"
+            style="display: flex !important; align-items: center !important; flex-grow: 0 !important; flex-shrink: 0 !important;">
+            <!-- Ícono de Usuario -->
+            <a class="has-text-dark px-3" href="#" id="btn-usuario-login" title="Mi Cuenta">
+              <span class="icon is-medium"><i class="fas fa-user fa-lg"></i></span>
+            </a>
+            <!-- Ícono de Carrito con Burbuja de Notificación -->
+            <a class="has-text-dark px-3" id="btn-abrir-carrito" title="Ver Carrito"
+              style="position: relative; display: inline-block;">
+              <span class="icon is-medium"><i class="fas fa-shopping-bag fa-lg"></i></span>
+              <span id="carrito-burbuja-contador" class="tag is-danger is-rounded"
+                style="position: absolute; top: -5px; right: -2px; font-size: 0.65rem; padding: 0.25rem 0.4rem; display: none;">0</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- NIVEL 2: BARRA DE CATEGORÍAS BLANCA  -->
+    <nav class="navbar is-white" role="navigation" aria-label="categories navigation">
+      <div class="container">
+
+        <!-- Botón Hamburguesa (Visible solo en celulares) -->
+        <div class="navbar-brand is-hidden-desktop" style="display: flex; justify-content: flex-end; width: 100%;">
+          <a role="button" class="navbar-burger mr-2" id="burger-button" aria-label="menu" aria-expanded="false"
+            data-target="navbar-menu-clothes">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+
+        <!-- Contenedor del menú responsivo -->
+        <div id="navbar-menu-clothes" class="navbar-menu nav-menu-estilo">
+          <!-- navbar-end jala los elementos a la derecha en PC, pero en móvil Bulma los apila verticalmente de forma limpia -->
+          <div class="navbar-end nav-enlaces-contenedor">
+
+            <a class="navbar-item has-text-weight-semibold mx-3 text-hover-yellow" href="#">Inicio</a>
+            <a class="navbar-item has-text-weight-semibold mx-3 text-hover-yellow" href="#servicios">Servicios</a>
+
+            <!-- Desplegable de Prendas -->
+            <div class="navbar-item has-dropdown is-hoverable mx-3">
+              <a class="navbar-link has-text-weight-semibold text-hover-yellow">Ropa</a>
+              <div class="navbar-dropdown">
+                <a href="#running" class="navbar-item">Running</a>
+                <a href="#futbol" class="navbar-item">Fútbol</a>
+                <a href="#accesorios" class="navbar-item">Accesorios</a>
+                <a href="#productos" class="navbar-item">Lo mas vendido</a>
+              </div>
+
+            </div>
+
+            <a class="navbar-item has-text-weight-semibold mx-3 text-hover-yellow" href="#contactenos">Contáctenos</a>
+
+            <!-- Clon de Cuenta exclusivo para el menú de celulares -->
+            <div class="navbar-item px-4 is-hidden-desktop flex-mobile-icons mt-3 pt-3"
+              style="border-top: 1px solid #eee; width: 100%;">
+              <span class="icon is-medium mr-4 has-text-dark">
+                <i class="fas fa-user"></i>
+                <span class="is-size-7 ml-2 has-text-weight-semibold">Mi Cuenta</span>
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </nav>
+
+
+  </header>
+
+
+
+  <!-- Carrusel Principal -->
+  <main>
+    <section class="section py-5 bg-light position-relative overflow-hidden" aria-label="Banner Principal">
+      <div class="container">
+        <div class="box p-0 border-0 shadow-sm"
+          style="position: relative; height: 400px; border-radius: 12px; overflow: hidden; background-color: #1a1a1a;">
+
+          <div class="carousel-item is-active"
+            style="position: absolute; inset: 0; display: flex; align-items: center;">
+            <img th:src="@{/imagenes/carrusel1.jpg}" alt="Supera tus Límites"
+              style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5;">
+            <div class="px-6 py-5" style="position: relative; z-index: 2; max-width: 600px;">
+              <span class="tag is-warning is-rounded has-text-weight-bold tracking-wide mb-3">NUEVA TEMPORADA</span>
+              <h1 class="title is-2 has-text-white has-text-weight-bold is-italic mb-3">Supera tus Límites</h1>
+              <p class="subtitle is-5 has-text-white mb-4" style="color: #ffffff !important; font-weight: 400;">Descubre
+                la nueva colección de ropa técnica de alta resistencia diseñada para maximizar tu rendimiento diario.
+              </p>
+              <a href="#productos" class="button is-white is-rounded has-text-weight-bold tracking-wide">Explorar
+                Colección</a>
+            </div>
+          </div>
+
+          <div class="carousel-item" style="position: absolute; inset: 0; display: none; align-items: center;">
+            <img th:src="@{/imagenes/carrusel2.jpg}" alt="Rendimiento Premium"
+              style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5;">
+            <div class="px-6 py-5" style="position: relative; z-index: 2; max-width: 600px;">
+              <span class="tag is-warning is-rounded has-text-weight-bold tracking-wide mb-3">TECNOLOGÍA AVANZADA</span>
+              <h1 class="title is-2 has-text-white has-text-weight-bold is-italic mb-3">Rendimiento Premium</h1>
+              <p class="subtitle is-5 has-text-white mb-4" style="color: #ffffff !important; font-weight: 400;">Prendas
+                confeccionadas con tecnología Dry-Fit de alta absorción, tejidos elásticos y costuras anti-roce.</p>
+              <a href="#productos" class="button is-white is-rounded has-text-weight-bold tracking-wide">Ver
+                Catálogo</a>
+            </div>
+          </div>
+
+          <div class="carousel-item" style="position: absolute; inset: 0; display: none; align-items: center;">
+            <img th:src="@{/imagenes/carrusel01.jpg}" alt="Liquidación Linksport"
+              style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.5;">
+            <div class="px-6 py-5" style="position: relative; z-index: 2; max-width: 600px;">
+              <span class="tag is-danger is-rounded has-text-weight-bold tracking-wide mb-3">LIQUIDACIÓN TOTAL</span>
+              <h1 class="title is-2 has-text-white has-text-weight-bold is-italic mb-3">Hasta 50% OFF</h1>
+              <p class="subtitle is-5 has-text-white mb-4" style="color: #ffffff !important; font-weight: 400;">Equípate
+                con el mejor calzado y textil deportivo de temporada por tiempo limitado en todo nuestro catálogo.</p>
+              <a href="#productos" class="button is-white is-rounded has-text-weight-bold tracking-wide">Comprar
+                Ahora</a>
+            </div>
+          </div>
+
+          <button onclick="prevSlide()" class="button is-dark"
+            style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); z-index: 10; border-radius: 50%; width: 45px; height: 45px; opacity: 0.8;">
+            <span class="icon"><i class="fas fa-chevron-left"></i></span>
+          </button>
+          <button onclick="nextSlide()" class="button is-dark"
+            style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); z-index: 10; border-radius: 50%; width: 45px; height: 45px; opacity: 0.8;">
+            <span class="icon"><i class="fas fa-chevron-right"></i></span>
+          </button>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+
+
+
+
+  <!-- SECCIÓN DE BENEFICIOS (CONECTADA AL CSS EXTERNO) -->
+  <section class="section bg-light py-6" id="servicios">
+    <div class="container">
+      <div class="columns is-mobile is-multiline has-text-centered justify-content-center">
+
+        <!-- Beneficio 1: Envíos -->
+        <div class="column is-4-desktop is-4-tablet is-12-mobile px-5 mb-mobile-4">
+          <div class="is-flex is-flex-direction-column is-align-items-center">
+            <!-- Usamos una clase personalizada limpia llamada 'beneficio-icono' -->
+            <span class="icon is-large beneficio-icono">
+              <i class="fas fa-truck-fast fa-2x"></i>
+            </span>
+            <h3 class="title is-6 has-text-weight-bold has-text-dark mt-3 mb-2">Envíos Rápidos y Seguros</h3>
+            <p class="is-size-7 has-text-grey px-4">Llegamos a la puerta de tu casa a nivel nacional.</p>
+          </div>
+        </div>
+
+        <!-- Beneficio 2: Calidad -->
+        <div class="column is-4-desktop is-4-tablet is-12-mobile px-5 mb-mobile-4">
+          <div class="is-flex is-flex-direction-column is-align-items-center">
+            <span class="icon is-large beneficio-icono">
+              <i class="fas fa-medal fa-2x"></i>
+            </span>
+            <h3 class="title is-6 has-text-weight-bold has-text-dark mt-3 mb-2">Calidad Premium</h3>
+            <p class="is-size-7 has-text-grey px-4">Tejidos de máxima elasticidad y resistencia diseñados para el alto
+              rendimiento.</p>
+          </div>
+        </div>
+
+        <!-- Beneficio 3: Descuentos -->
+        <div class="column is-4-desktop is-4-tablet is-12-mobile px-5">
+          <div class="is-flex is-flex-direction-column is-align-items-center">
+            <span class="icon is-large beneficio-icono">
+              <i class="fas fa-tags fa-2x"></i>
+            </span>
+            <h3 class="title is-6 has-text-weight-bold has-text-dark mt-3 mb-2">Descuentos Exclusivos</h3>
+            <p class="is-size-7 has-text-grey px-4">Promociones únicas todas las semanas para miembros.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ==========================================================================
+     SECCIÓN DE SERVICIOS: TABLA DE TARIFAS Y PLAZOS DE ENVÍO OPTIMIZADA
+     ========================================================================== -->
+  <section class="section py-5">
+    <div class="container">
+
+      <!-- Cabecera de Sección -->
+      <div class="has-text-centered mb-5">
+        <h2 class="title is-3 has-text-weight-bold mb-1">NUESTROS SERVICIOS DE ENTREGA</h2>
+        <p class="is-size-6 has-text-grey">Consulta la cobertura, tiempos estimados y tarifas a nivel nacional</p>
+      </div>
+
+      <!-- Contenedor responsivo con márgenes internos controlados -->
+      <div class="table-container px-0">
+        <!-- Tabla con diseño e interacciones nativas de Bulma -->
+        <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+
+          <!-- Encabezados de la Tabla vinculados a tu CSS -->
+          <thead class="tabla-cabecera-color">
+            <tr>
+              <th class="has-text-dark has-text-centered py-3">Zona</th>
+              <th class="has-text-dark has-text-centered py-3">Servicio</th>
+              <th class="has-text-dark has-text-centered py-3">Entrega</th>
+              <th class="has-text-dark has-text-centered py-3">Costo</th>
+              <th class="has-text-dark has-text-centered py-3">Estado</th>
+            </tr>
+          </thead>
+
+          <!-- Cuerpo Informativo Centrado y Compacto -->
+          <tbody class="is-size-7-mobile">
+            <tr>
+              <td class="has-text-weight-semibold">Lima Metro.</td>
+              <td class="has-text-centered">Express</td>
+              <td class="has-text-centered">24 hrs</td>
+              <td class="has-text-centered has-text-weight-bold">S/. 15.00</td>
+              <td class="has-text-centered"><span class="tag is-success is-light has-text-weight-bold">Activo</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="has-text-weight-semibold">Lima Prov.</td>
+              <td class="has-text-centered">Estándar</td>
+              <td class="has-text-centered">2-3 días</td>
+              <td class="has-text-centered has-text-weight-bold">S/. 19.00</td>
+              <td class="has-text-centered"><span class="tag is-success is-light has-text-weight-bold">Activo</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="has-text-weight-semibold">Norte (Piura/Truj)</td>
+              <td class="has-text-centered">Regular</td>
+              <td class="has-text-centered">3-5 días</td>
+              <td class="has-text-centered has-text-weight-bold">S/. 25.00</td>
+              <td class="has-text-centered"><span class="tag is-success is-light has-text-weight-bold">Activo</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="has-text-weight-semibold">Sur (Areq/Cusco)</td>
+              <td class="has-text-centered">Regular</td>
+              <td class="has-text-centered">4-6 días</td>
+              <td class="has-text-centered has-text-weight-bold">S/. 28.00</td>
+              <td class="has-text-centered"><span class="tag is-success is-light has-text-weight-bold">Activo</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="has-text-weight-semibold">Selva / Remoto</td>
+              <td class="has-text-centered">Especial</td>
+              <td class="has-text-centered">5-8 días</td>
+              <td class="has-text-centered has-text-weight-bold">S/. 35.00</td>
+              <td class="has-text-centered"><span class="tag is-warning is-light has-text-weight-bold">Alerta</span>
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+
+
+
+  <!-- ==========================================================================
+     GRILLA DE PRODUCTOS (SOLUCIÓN DEFINITIVA THYMELEAF + JAVASCRIPT)
+     ========================================================================== -->
+  <section class="section" id="productos">
+    <div class="container">
+      <div class="has-text-centered mb-6">
+        <h2 class="title is-3 has-text-weight-bold mb-1">LO MÁS VENDIDO</h2>
+        <p class="is-size-6 has-text-grey">Las prendas favoritas elegidas por nuestros clientes</p>
+      </div>
+
+      <div class="columns is-multiline">
+
+        <!-- Bucle dinámico nativo de Spring Boot -->
+        <div class="column is-3" th:each="producto : ${productos}">
+          <div class="card"
+            style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
+
+            <div class="card-image" style="position: relative; overflow: hidden;">
+              <span class="tag is-danger is-rounded has-text-weight-bold"
+                style="position: absolute; top: 12px; right: 12px; z-index: 1;">🔥 TOP</span>
+              <figure class="image is-4by5">
+                <!-- Sintaxis corregida e infalible para URLs híbridas -->
+                <img
+                  th:src="${producto.imagenSrc.startsWith('http')} ? ${producto.imagenSrc} : @{/}+${producto.imagenSrc}"
+                  class="producto-imagen" th:alt="${producto.nombre}" style="object-fit: cover;">
+              </figure>
+            </div>
+
+            <div class="card-content p-4"
+              style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+              <div class="mb-4">
+                <h3 class="subtitle is-6 has-text-weight-bold has-text-dark mb-2" th:text="${producto.nombre}">Nombre
+                  del Producto</h3>
+                <div class="is-flex is-align-items-center">
+                  <span class="has-text-danger has-text-weight-bold is-size-5 mr-2"
+                    th:text="'S/. ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">S/. 0.00</span>
+                </div>
+              </div>
+              <!-- Botón oficial negro de Bulma con el detector del carrito -->
+              <button class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
+                CARRITO</button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RUNNING SECTION ================= -->
+  <section class="section" id="running" style="padding-top: 4rem;">
+    <div class="container">
+      <div class="has-text-centered mb-5">
+        <h2 class="title is-4 has-text-weight-bold mb-1">COLECCIÓN RUNNING</h2>
+        <p class="is-size-7 has-text-grey">Equípate con el mejor calzado y textil de alta resistencia</p>
+      </div>
+      <div class="columns is-multiline">
+        <div class="column is-3" th:each="producto : ${productosRunning}">
+          <div class="card"
+            style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
+            <div class="card-image">
+              <figure class="image is-4by5"><img th:src="@{'/' + ${producto.imagenSrc}}" class="producto-imagen"
+                  style="object-fit: cover;"></figure>
+            </div>
+            <div class="card-content p-4"
+              style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+              <div class="mb-4">
+                <h3 class="subtitle is-6 has-text-weight-bold has-text-dark mb-2" th:text="${producto.nombre}">Nombre
+                </h3>
+                <span class="has-text-danger has-text-weight-bold is-size-5"
+                  th:text="'S/. ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">S/. 0.00</span>
+              </div>
+              <button class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
+                CARRITO</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FÚTBOL SECTION ================= -->
+  <section class="section" id="futbol" style="padding-top: 4rem;">
+    <div class="container">
+      <div class="has-text-centered mb-5">
+        <h2 class="title is-4 has-text-weight-bold mb-1">UNIVERSO FÚTBOL</h2>
+        <p class="is-size-7 has-text-grey">Chimpunes y camisetas oficiales para dominar el terreno de juego</p>
+      </div>
+      <div class="columns is-multiline">
+        <div class="column is-3" th:each="producto : ${productosFutbol}">
+          <div class="card"
+            style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
+            <div class="card-image">
+              <figure class="image is-4by5"><img th:src="@{'/' + ${producto.imagenSrc}}" class="producto-imagen"
+                  style="object-fit: cover;"></figure>
+            </div>
+            <div class="card-content p-4"
+              style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+              <div class="mb-4">
+                <h3 class="subtitle is-6 has-text-weight-bold has-text-dark mb-2" th:text="${producto.nombre}">Nombre
+                </h3>
+                <span class="has-text-danger has-text-weight-bold is-size-5"
+                  th:text="'S/. ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">S/. 0.00</span>
+              </div>
+              <button class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
+                CARRITO</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACCESORIOS SECTION ================= -->
+  <section class="section" id="accesorios" style="padding-top: 4rem;">
+    <div class="container">
+      <div class="has-text-centered mb-5">
+        <h2 class="title is-4 has-text-weight-bold mb-1">ACCESORIOS DEPORTIVOS</h2>
+        <p class="is-size-7 has-text-grey">Complementos esenciales para potenciar tu entrenamiento diario</p>
+      </div>
+      <div class="columns is-multiline">
+        <div class="column is-3" th:each="producto : ${productosAccesorios}">
+          <div class="card"
+            style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
+            <div class="card-image">
+              <figure class="image is-4by5"><img th:src="@{'/' + ${producto.imagenSrc}}" class="producto-imagen"
+                  style="object-fit: cover;"></figure>
+            </div>
+            <div class="card-content p-4"
+              style="flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+              <div class="mb-4">
+                <h3 class="subtitle is-6 has-text-weight-bold has-text-dark mb-2" th:text="${producto.nombre}">Nombre
+                </h3>
+                <span class="has-text-danger has-text-weight-bold is-size-5"
+                  th:text="'S/. ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">S/. 0.00</span>
+              </div>
+              <button class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
+                CARRITO</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ==========================================================================
+     SECCIÓN DE SUSCRIPCIÓN (FORMULARIO )
+     ========================================================================== -->
+
+  <section class="section bg-yellow-brand py-6">
+    <div class="container">
+      <div class="columns is-vcentered">
+
+        <!-- Lado Izquierdo: Textos -->
+        <div class="column is-5">
+          <div class="content">
+            <h2 class="title is-4 has-text-weight-bold has-text-dark mb-3">
+              <span class="icon mr-2"><i class="fas fa-envelope"></i></span>SUSCRÍBETE A LINK SPORT
+            </h2>
+            <p class="subtitle is-6 has-text-dark mb-1">¡Accede a cupones, ofertas y noticias exclusivas!</p>
+            <p class="subtitle is-6 has-text-dark">¡Obtén un descuento especial por tu cumpleaños!</p>
+          </div>
+        </div>
+
+        <!-- Lado Derecho: Formulario -->
+        <div class="column is-7">
+          <form id="form-suscripcion" novalidate>
+
+            <!-- Nombres y Apellidos -->
+            <div class="field mb-3">
+              <div class="control">
+                <input class="input is-radiusless py-4" type="text" id="input-nombre" placeholder="Nombres y Apellidos">
+              </div>
+              <!-- Mensaje de error oculto por defecto -->
+              <p class="help is-danger is-hidden" id="error-nombre"></p>
+            </div>
+
+            <!-- Celular y Fecha de Nacimiento -->
+            <div class="columns is-mobile is-variable is-2 mb-0">
+              <div class="column is-6">
+                <div class="field">
+                  <div class="control">
+                    <input class="input is-radiusless py-4" type="text" id="input-celular" placeholder="Celular">
+                  </div>
+                  <p class="help is-danger is-hidden" id="error-celular"></p>
+                </div>
+              </div>
+              <div class="column is-6">
+                <div class="field">
+                  <div class="control">
+                    <input class="input is-radiusless py-4" type="date" id="input-fecha">
+                  </div>
+                  <p class="help is-danger is-hidden" id="error-fecha"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Correo electrónico y Botón -->
+            <div class="columns is-desktop is-variable is-2 is-vcentered mb-3">
+              <div class="column is-8">
+                <div class="field">
+                  <div class="control">
+                    <input class="input is-radiusless py-4" type="email" id="input-correo"
+                      placeholder="Correo electrónico">
+                  </div>
+                  <p class="help is-danger is-hidden" id="error-correo"></p>
+                </div>
+              </div>
+              <div class="column is-4">
+                <button type="submit"
+                  class="button is-dark is-fullwidth is-radiusless has-text-weight-bold py-4">SUSCRIBIRME</button>
+              </div>
+            </div>
+
+            <!-- Checkbox de Políticas -->
+            <div class="field">
+              <div class="control">
+                <label class="checkbox has-text-dark is-size-7">
+                  <input type="checkbox" id="input-politicas" class="mr-2"> Acepto las políticas de protección de datos
+                  de Link Sport.
+                </label>
+              </div>
+              <p class="help is-danger is-hidden" id="error-politicas"></p>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+     PANEL LATERAL DEL CARRITO DE COMPRAS (SIDEBAR CART - ESTILO REFERENCIA)
+     ========================================================================== -->
+  <div id="carrito-sidebar" class="carrito-panel">
+    <!-- CABECERA DEL CARRITO CON ALINEACIÓN REFORZADA AL BORDE DERECHO -->
+    <div class="carrito-header p-4 is-flex is-justify-content-between is-align-items-center"
+      style="width: 100% !important; display: flex !important; justify-content: space-between !important; align-items: center !important;">
+
+      <h3 class="title is-5 has-text-weight-bold m-0 is-flex is-align-items-center has-text-dark">
+        <span class="icon mr-2"><i class="fas fa-shopping-bag"></i></span> Tu Carrito
+      </h3>
+
+      <!-- El botón ahora se irá obligatoriamente al extremo derecho -->
+      <button id="btn-cerrar-carrito" class="delete is-medium"
+        style="margin-left: auto !important; margin-right: 0 !important;"></button>
+
+    </div>
+
+
+
+    <!-- Contenedor dinámico de productos agregados -->
+    <div id="carrito-productos-lista" class="p-4"
+      style="flex-grow: 1; overflow-y: auto; max-height: calc(100vh - 220px);">
+      <!-- JavaScript inyectará aquí los productos de forma dinámica -->
+      <div id="carrito-vacio-mensaje" class="has-text-centered has-text-grey py-6">
+        <span class="icon is-large"><i class="fas fa-cart-shopping fa-2x mb-3"></i></span>
+        <p>Tu carrito está vacío.</p>
+      </div>
+    </div>
+
+    <!-- Pie del Carrito (Totales y Botón de Pago) -->
+    <div class="carrito-footer p-4">
+      <div class="is-flex is-justify-content-between is-align-items-center mb-4">
+        <span class="has-text-weight-bold is-size-6">Subtotal:</span>
+        <span id="carrito-subtotal-valor" class="has-text-weight-bold is-size-5">S/. 0.00</span>
+      </div>
+      <button id="btn-proceder-pago" class="button is-black is-fullwidth is-radiusless has-text-weight-bold py-4">
+        PROCEDER AL PAGO
+      </button>
+    </div>
+  </div>
+
+  <!-- Fondo oscuro translúcido de asistencia al abrir el carrito -->
+  <div id="carrito-overlay" class="carrito-overlay-bg"></div>
+
+
+  <!-- ==========================================================================
+     VENTANA MODAL DE BIENVENIDA / INICIO DE SESIÓN CON OFERTA
+     ========================================================================== -->
+  <div class="modal" id="modal-login-oferta">
+    <div class="modal-background" id="modal-login-bg-close"></div>
+    <div class="modal-content px-4" style="max-width: 460px;">
+
+      <!-- Caja con diseño limpio e institucional de Bulma -->
+      <div class="box p-5 relative" style="border-radius: 12px; overflow: hidden; background-color: #ffffff;">
+
+        <!-- Banner de Descuento llamativo -->
+        <div class="has-text-centered mb-4 py-3 bg-yellow-brand"
+          style="margin: -1.25rem -1.25rem 1.5rem -1.25rem; border-radius: 12px 12px 0 0;">
+          <span class="tag is-danger is-rounded has-text-weight-bold mb-1">¡REGALO DE BIENVENIDA!</span>
+          <h3 class="title is-4 has-text-weight-bold has-text-dark m-0">S/. 50.00 DSCTO.</h3>
+        </div>
+
+        <div class="has-text-centered mb-4">
+          <p class="subtitle is-6 has-text-grey">Inicia sesión o regístrate en segundos para activar tu cupón exclusivo
+            en tu primera compra de ropa.</p>
+        </div>
+
+        <!-- Formulario de Inicio de Sesión -->
+        <form id="form-login-modal" novalidate>
+
+          <!-- Campo Correo -->
+          <div class="field mb-3">
+            <label class="label is-size-7 has-text-weight-semibold">Correo Electrónico</label>
+            <div class="control has-icons-left">
+              <input class="input is-radiusless py-4" type="email" id="login-correo" placeholder="ejemplo@correo.com">
+              <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+            </div>
+            <p class="help is-danger is-hidden" id="error-login-correo"></p>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="field mb-4">
+            <label class="label is-size-7 has-text-weight-semibold">Contraseña</label>
+            <div class="control has-icons-left">
+              <input class="input is-radiusless py-4" type="password" id="login-pass" placeholder="••••••••">
+              <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+            </div>
+            <p class="help is-danger is-hidden" id="error-login-pass"></p>
+          </div>
+
+          <!-- Botón de Envío -->
+          <button type="submit" class="button is-black is-fullwidth is-radiusless has-text-weight-bold py-4 mb-3">
+            INICIAR SESIÓN Y CANJEAR
+          </button>
+
+          <!-- Texto secundario de Registro rápido -->
+          <p class="has-text-centered is-size-7 has-text-grey">
+            ¿No tienes una cuenta? <a href="#" id="link-ir-a-registro" class="has-text-weight-bold has-text-dark"
+              style="text-decoration: underline;">Regístrate aquí</a>
+
+          </p>
+        </form>
+
+      </div>
+    </div>
+    <!-- Botón X de cierre oficial de Bulma -->
+    <button class="modal-close is-large" id="modal-login-x-close" aria-label="close"></button>
+  </div>
+
+  <!-- ==========================================================================
+     VENTANA MODAL DE REGISTRO (CONECTADA AL ENLACE DE INICIO DE SESIÓN)
+     ========================================================================== -->
+  <div class="modal" id="modal-registro-usuario">
+    <div class="modal-background" id="modal-reg-bg-close"></div>
+    <div class="modal-content px-4" style="max-width: 460px;">
+
+      <div class="box p-5" style="border-radius: 12px; overflow: hidden; background-color: #ffffff;">
+
+        <!-- Banner Superior -->
+        <div class="has-text-centered mb-4 py-3 bg-yellow-brand"
+          style="margin: -1.25rem -1.25rem 1.5rem -1.25rem; border-radius: 12px 12px 0 0;">
+          <span class="tag is-danger is-rounded has-text-weight-bold mb-1">CREAR CUENTA</span>
+          <h3 class="title is-4 has-text-weight-bold has-text-dark m-0">ÚNETE A LINK SPORT</h3>
+        </div>
+
+        <!-- Formulario de Registro con validación deshabilitada nativamente -->
+        <form id="form-registro-modal" novalidate>
+
+          <!-- Campo Nombres -->
+          <div class="field mb-3">
+            <label class="label is-size-7 has-text-weight-semibold">Nombres y Apellidos</label>
+            <div class="control has-icons-left">
+              <input class="input is-radiusless py-4" type="text" id="reg-nombre" placeholder="Juan Pérez">
+              <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
+            </div>
+            <p class="help is-danger is-hidden" id="error-reg-nombre"></p>
+          </div>
+
+          <!-- Campo Correo -->
+          <div class="field mb-3">
+            <label class="label is-size-7 has-text-weight-semibold">Correo Electrónico</label>
+            <div class="control has-icons-left">
+              <input class="input is-radiusless py-4" type="email" id="reg-correo" placeholder="ejemplo@correo.com">
+              <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
+            </div>
+            <p class="help is-danger is-hidden" id="error-reg-correo"></p>
+          </div>
+
+          <!-- Campo Contraseña -->
+          <div class="field mb-4">
+            <label class="label is-size-7 has-text-weight-semibold">Contraseña (Mínimo 6 caracteres)</label>
+            <div class="control has-icons-left">
+              <input class="input is-radiusless py-4" type="password" id="reg-pass" placeholder="••••••••">
+              <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
+            </div>
+            <p class="help is-danger is-hidden" id="error-reg-pass"></p>
+          </div>
+
+          <!-- Botón de Envío -->
+          <button type="submit" class="button is-black is-fullwidth is-radiusless has-text-weight-bold py-4 mb-3">
+            REGISTRARME Y CANJEAR CUPÓN
+          </button>
+
+          <!-- Enlace para regresar al Login -->
+          <p class="has-text-centered is-size-7 has-text-grey">
+            ¿Ya tienes una cuenta? <a href="#" id="link-ir-a-login" class="has-text-weight-bold has-text-dark"
+              style="text-decoration: underline;">Inicia sesión aquí</a>
+          </p>
+        </form>
+
+      </div>
+    </div>
+    <button class="modal-close is-large" id="modal-reg-x-close" aria-label="close"></button>
+  </div>
+
+
+  <!-- ==========================================================================
+     VENTANA EMERGENTE (MODAL DE COMPRA EXITOSA)
+     ========================================================================== -->
+  <div class="modal" id="modal-compra-exitosa">
+    <div class="modal-background" id="modal-compra-bg-close"></div>
+    <div class="modal-content px-4" style="max-width: 450px;">
+      <div class="box has-text-centered py-5 px-5" style="border-radius: 12px;">
+        <span class="icon is-large has-text-success mb-3">
+          <i class="fas fa-bag-shopping fa-3x"></i>
+        </span>
+        <h3 class="title is-4 has-text-weight-bold mb-2">¡Pago efectuado con éxito!</h3>
+        <p class="subtitle is-6 has-text-grey mb-4">
+          Muchas gracias por tu compra en <strong>LINK SPORT</strong>. Tu pedido ya está siendo procesado y preparado
+          para el envío nacional.
+        </p>
+        <button class="button is-dark is-rounded px-5 has-text-weight-bold"
+          id="modal-compra-btn-aceptar">Aceptar</button>
+      </div>
+    </div>
+    <button class="modal-close is-large" id="modal-compra-x-close" aria-label="close"></button>
+  </div>
+
+
+
+  <!-- ==========================================================================
+     VENTANA EMERGENTE (MODAL DE CONFIRMACIÓN DE BULMA)
+     ========================================================================== -->
+  <div class="modal" id="modal-confirmacion">
+    <div class="modal-background" id="modal-bg-close"></div>
+    <div class="modal-content px-4" style="max-width: 450px;">
+      <div class="box has-text-centered py-5 px-5" style="border-radius: 12px;">
+        <span class="icon is-large has-text-success mb-3">
+          <i class="fas fa-circle-check fa-3x"></i>
+        </span>
+        <h3 class="title is-4 has-text-weight-bold mb-2">¡Suscripción Exitosa!</h3>
+        <p class="subtitle is-6 has-text-grey mb-4" id="modal-mensaje-texto">
+          Gracias por registrarte. Tus datos se han procesado correctamente.
+        </p>
+        <button class="button is-dark is-rounded px-5 has-text-weight-bold" id="modal-btn-aceptar">Aceptar</button>
+      </div>
+    </div>
+    <button class="modal-close is-large" id="modal-x-close" aria-label="close"></button>
+  </div>
+
+
+  <!-- ==========================================================================
+     FOOTER PRINCIPAL (PIE DE PÁGINA NEGRO)
+     ========================================================================== -->
+  <footer class="footer has-background-black py-6" id="contactenos">
+    <div class="container px-4">
+      <div class="columns is-multiline">
+
+        <!-- Columna 1: Logo, Descripción y Redes Redondeadas -->
+        <div class="column is-3-desktop is-6-tablet is-12-mobile mb-5">
+          <div class="mb-4">
+            <h2 class="title is-4 has-text-weight-bold has-text-white tracking-wide mb-3">
+              <span class="icon mr-2 has-text-warning"><i class="fas fa-shirt"></i></span>LINK SPORT
+            </h2>
+            <p class="is-size-7 has-text-grey-light" style="line-height: 1.6; max-width: 260px;">
+              Líderes en el desarrollo de indumentaria deportiva con materiales tecnológicos de alta absorción y
+              costuras reforzadas anti-roce diseñadas para maximizar tu rendimiento.
+            </p>
+          </div>
+          <!-- Iconos circulares con fondo gris oscuro idénticos a la imagen -->
+          <div class="buttons mt-4">
+            <a href="https://facebook.com" class="button is-dark is-rounded px-3"
+              style="background-color: #222; border: none;"><span class="icon has-text-white"><i
+                  class="fab fa-facebook-f"></i></span></a>
+            <a href="https://web.whatsapp.com/" class="button is-dark is-rounded px-3"
+              style="background-color: #222; border: none;"><span class="icon has-text-white"><i
+                  class="fab fa-whatsapp"></i></span></a>
+            <a href="https://tiktok.com" class="button is-dark is-rounded px-3"
+              style="background-color: #222; border: none;"><span class="icon has-text-white"><i
+                  class="fab fa-tiktok"></i></span></a>
+            <a href="https://www.gmail.com" class="button is-dark is-rounded px-3"
+              style="background-color: #222; border: none;"><span class="icon has-text-white"><i
+                  class="fas fa-envelope"></i></span></a>
+          </div>
+        </div>
+
+        <!-- Columna 2: Mapa Corporativo -->
+        <div class="column is-3-desktop is-6-tablet is-12-mobile mb-5">
+          <h4 class="title is-6 has-text-weight-bold tracking-wide has-text-white mb-4">MAPA CORPORATIVO</h4>
+          <ul class="is-size-7" style="list-style: none; margin: 0; padding: 0; line-height: 2.2;">
+            <li><a href="#" class="has-text-grey-light">Inicio de Sitio</a></li>
+            <li><a href="#nosotros" class="has-text-grey-light">Nuestra Identidad</a></li>
+            <li><a href="#servicios" class="has-text-grey-light">Servicios Técnicos</a></li>
+            <li><a href="#vendido" class="has-text-grey-light">Catálogo de Productos</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Canales de Atención (Con Íconos Amarillos) -->
+        <div class="column is-3-desktop is-6-tablet is-12-mobile mb-5">
+          <h4 class="title is-6 has-text-weight-bold tracking-wide has-text-white mb-4">CANALES DE ATENCIÓN</h4>
+          <ul class="is-size-7 has-text-grey-light" style="list-style: none; margin: 0; padding: 0; line-height: 2.4;">
+            <li class="is-flex is-align-items-center">
+              <span class="icon mr-2 has-text-warning"><i class="fas fa-phone"></i></span> +51 987 654 321
+            </li>
+            <li class="is-flex is-align-items-center">
+              <span class="icon mr-2 has-text-warning"><i class="fas fa-envelope"></i></span> consultas@Linksport.pe
+            </li>
+            <li class="is-flex is-align-items-center">
+              <span class="icon mr-2 has-text-warning"><i class="fas fa-calendar-days"></i></span> Lun - Vie: 8:00 AM -
+              6:00 PM
+            </li>
+            <li class="is-flex is-align-items-center">
+              <span class="icon mr-2 has-text-warning"><i class="fas fa-clock"></i></span> Sáb: 8:00 AM - 1:00 PM
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna 4: Sede Central Vivero (Adaptado a Tienda) -->
+        <div class="column is-3-desktop is-6-tablet is-12-mobile mb-5">
+          <h4 class="title is-6 has-text-weight-bold tracking-wide has-text-white mb-4">SEDE CENTRAL TIENDA</h4>
+          <div class="is-size-7 has-text-grey-light mb-4" style="line-height: 1.6;">
+            <p class="is-flex is-align-items-start">
+              <span class="icon mr-2 mt-1 has-text-warning"><i class="fas fa-location-dot"></i></span>
+              <span>Calle Ramón Dagnino # 218, Jesús María, Lima - Perú</span>
+            </p>
+          </div>
+          <div class="pt-2">
+            <a href="https://maps.app.goo.gl/6oeg9A6AerJH8XFk9" target="_blank"
+              class="is-size-7 has-text-warning is-flex is-align-items-center has-text-weight-semibold">
+              <span class="icon mr-2"><i class="fas fa-map-location-dot"></i></span> Ver en Google Maps
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+
+  <script th:src="@{/js/script.js}"></script>
+
+
+</body>
+
+</html>

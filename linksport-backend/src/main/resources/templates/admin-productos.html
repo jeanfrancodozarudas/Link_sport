@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" xmlns:th="http://thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración - Linksport</title>
+
+  <!-- TU ENLACE OFICIAL BULMA 1.0.4 QUE SÍ DESTRABA EL ENTORNO -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css">
+  <!-- Iconos FontAwesome para los botones del CRUD -->
+  <link rel="stylesheet" href="https://cloudflare.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+
+  <!-- Tipografía Poppins elegante para look e-commerce -->
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Forzamos el centrado vertical y horizontal absoluto del cuadro en el medio usando Flexbox */
+    body {
+      font-family: 'Poppins', sans-serif !important;
+      display: flex !important;
+      justify-content: center !important;
+      align-items: center !important;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 2rem 1rem;
+      width: 100vw;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Contenedor general limitado para que la tarjeta se vea simétrica -->
+  <div class="container" style="max-width: 950px; width: 100%;">
+
+    <!-- El cuadro 'box' de Bulma con bordes redondeados y sombra premium -->
+    <div class="box p-0 shadow" style="border-radius: 16px; overflow: hidden; border: none; background-color: #ffffff;">
+
+      <!-- Cabecera con fondo amarillo oficial de LINKSPORT -->
+      <div class="p-5 has-text-centered" style="background-color: #FBC02D;">
+        <h1 class="title is-4 has-text-dark m-0" style="font-weight: 700; letter-spacing: 0.05em;">
+          ⚽ PANEL DE CONTROL CRUD - LINKSPORT
+        </h1>
+        <p class="subtitle is-7 has-text-dark mt-1 mb-0" style="font-weight: 500; opacity: 0.85;">
+          Administración de Productos en Tiempo Real (PostgreSQL + Spring Validation)
+        </p>
+      </div>
+
+      <!-- Cuerpo del cuadro controlado con las rejillas del framework -->
+      <div class="p-5">
+
+        <!-- FORMULARIO SUPERIOR: REJILLAS COMPACTAS NATIVAS DE BULMA -->
+        <div class="notification is-light mb-5" style="border-radius: 12px; border: 1px solid #e0e0e0;">
+          <h2 class="subtitle is-6 has-text-weight-bold mb-4"><i class="fas fa-plus-circle mr-2"></i>Gestión del
+            Catálogo Deportivo</h2>
+
+          <form th:action="@{/admin/productos/guardar}" th:object="${producto}" method="POST">
+            <input type="hidden" th:field="*{id}">
+
+            <!-- Usamos columns is-multiline para ordenar los inputs en línea recta -->
+            <div class="columns is-multiline is-vcentered">
+
+              <!-- Campo Nombre -->
+              <div class="column is-4">
+                <div class="field">
+                  <label class="label is-size-7">Nombre del Artículo</label>
+                  <div class="control">
+                    <input class="input is-small" type="text" th:field="*{nombre}" placeholder="Ej. Shorts de Training">
+                  </div>
+                  <p class="help is-danger has-text-weight-semibold mt-1" th:if="${#fields.hasErrors('nombre')}"
+                    th:errors="*{nombre}">Error</p>
+                </div>
+              </div>
+
+              <!-- Campo Precio -->
+              <div class="column is-2">
+                <div class="field">
+                  <label class="label is-size-7">Precio Base (S/.)</label>
+                  <div class="control">
+                    <input class="input is-small" type="number" step="0.01" th:field="*{precio}" placeholder="0.00">
+                  </div>
+                  <p class="help is-danger has-text-weight-semibold mt-1" th:if="${#fields.hasErrors('precio')}"
+                    th:errors="*{precio}">Error</p>
+                </div>
+              </div>
+
+              <!-- Campo URL Imagen -->
+              <div class="column is-4">
+                <div class="field">
+                  <label class="label is-size-7">Dirección URL de la Imagen</label>
+                  <div class="control">
+                    <input class="input is-small" type="text" th:field="*{imagenSrc}" placeholder="https://ejemplo.com">
+                  </div>
+                  <p class="help is-danger has-text-weight-semibold mt-1" th:if="${#fields.hasErrors('imagenSrc')}"
+                    th:errors="*{imagenSrc}">Error</p>
+                </div>
+              </div>
+
+              <!-- Botón Guardar Centrado -->
+              <div class="column is-2">
+                <div class="field">
+                  <label class="label is-size-7 is-hidden-mobile">&nbsp;</label>
+                  <div class="control">
+                    <button type="submit"
+                      class="button is-link is-small is-fullwidth has-text-weight-bold">GUARDAR</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+        <!-- TABLA COMPACTA CON ESTILOS COMPLETOS DE BULMA -->
+        <div class="table-container mb-5">
+          <table class="table is-bordered is-striped is-hoverable is-fullwidth m-0">
+            <thead>
+              <tr class="has-background-dark">
+                <th class="has-text-white has-text-centered py-3" style="width: 70px;">ID</th>
+                <th class="has-text-white has-text-centered py-3" style="width: 110px;">Imagen</th>
+                <th class="has-text-white py-3">Nombre del Artículo Deportivo</th>
+                <th class="has-text-white has-text-centered py-3" style="width: 140px;">Precio</th>
+                <th class="has-text-white has-text-centered py-3" style="width: 120px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="p : ${productos}">
+                <td class="has-text-weight-bold has-text-centered" style="vertical-align: middle;" th:text="${p.id}">1
+                </td>
+                <td class="has-text-centered" style="vertical-align: middle;">
+                  <img th:src="${#strings.startsWith(p.imagenSrc, 'http')} ? p.imagenSrc : @{/}+${p.imagenSrc}"
+                    style="width: 45px; height: 55px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+                </td>
+                <td class="has-text-weight-semibold" style="vertical-align: middle; color: #363636;"
+                  th:text="${p.nombre}">Zapatillas Running</td>
+                <td class="has-text-danger has-text-weight-bold has-text-centered"
+                  style="vertical-align: middle; font-size: 1.05rem;"
+                  th:text="'S/. ' + ${#numbers.formatDecimal(p.precio, 1, 2)}">S/. 0.00</td>
+                <td class="has-text-centered" style="vertical-align: middle;">
+                  <!-- Botón de edición nativo de Thymeleaf -->
+                  <a class="button is-warning is-small mr-1" th:href="@{/ver-productos(id=${p.id})}" title="Editar">
+                    <span class="icon is-small"><i class="fas fa-edit"></i></span>
+                  </a>
+                  <!-- Botón de borrado asíncrono con confirmación -->
+                  <button class="button is-danger is-small" th:attr="onclick='eliminarProducto(' + ${p.id} + ')'"
+                    title="Eliminar">
+                    <span class="icon is-small"><i class="fas fa-trash"></i></span>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pie de la tarjeta con el botón oficial e-commerce de Bulma -->
+        <div class="has-text-centered pt-4" style="border-top: 1px solid #eeeeee;">
+          <a href="/" class="button is-dark is-rounded px-6 has-text-weight-bold"
+            style="box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            ← Volver a la Tienda
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <script>
+    window.eliminarProducto = function (id) {
+      if (confirm("¿Estás seguro de que deseas eliminar esta prenda del inventario de PostgreSQL?")) {
+        fetch(`/api/productos/${id}`, { method: 'DELETE' })
+          .then(res => {
+            if (res.ok) {
+              window.location.href = '/ver-productos';
+            } else {
+              alert("No se pudo eliminar el artículo.");
+            }
+          });
+      }
+    };
+  </script>
+</body>
+
+</html>
