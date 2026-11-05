@@ -21,9 +21,10 @@
   <html lang="es" data-theme="light" xmlns:th="http://thymeleaf.org">
 
 
-</head>
+<style>[hidden] { display: none !important; }</style></head>
 
 <body>
+<div class="container px-4 py-3"><div class="is-flex is-flex-wrap-wrap is-align-items-center" style="gap: .75rem"><span data-cuenta></span><a data-login href="/login">Iniciar sesión / registrarse</a><a data-admin href="/ver-productos" hidden>Administración</a><a data-admin href="/ver-usuarios" hidden>Usuarios</a><a href="/mis-pedidos">Mis pedidos</a><button data-logout class="button is-small" type="button" hidden>Cerrar sesión</button></div><p id="sesion-status" class="help" role="status"></p></div>
 
   
   <header class="shadow-sm">
@@ -111,7 +112,7 @@
 
             </div>
 
-            <a class="navbar-item has-text-weight-semibold mx-3 text-hover-yellow" href="#contactenos">Contáctenos</a>
+            <a class="navbar-item has-text-weight-semibold mx-3 text-hover-yellow" href="/mis-pedidos">Mis pedidos</a><a class="navbar-item has-text-weight-semibold mx-3 text-hover-yellow" href="#contactenos">Contáctenos</a>
 
             <!-- Clon de Cuenta exclusivo para el menú de celulares -->
             <div class="navbar-item px-4 is-hidden-desktop flex-mobile-icons mt-3 pt-3"
@@ -339,7 +340,7 @@
 
         <!-- Bucle dinámico nativo de Spring Boot -->
         <div class="column is-3" th:each="producto : ${productos}">
-          <div class="card"
+          <div class="card" th:attr="data-producto-id=${producto.id},data-precio=${producto.precio},data-stock=${producto.cantidad}"
             style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
 
             <div class="card-image" style="position: relative; overflow: hidden;">
@@ -364,7 +365,7 @@
                 </div>
               </div>
               <!-- Botón oficial negro de Bulma con el detector del carrito -->
-              <button class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
+              <p class="help mb-2" th:text="${producto.cantidad == 0 ? 'Agotado' : 'Disponibles: ' + producto.cantidad}"></p><button th:disabled="${producto.cantidad == 0}" class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
                 CARRITO</button>
             </div>
 
@@ -384,7 +385,7 @@
       </div>
       <div class="columns is-multiline">
         <div class="column is-3" th:each="producto : ${productosRunning}">
-          <div class="card"
+          <div class="card" th:attr="data-producto-id=${producto.id},data-precio=${producto.precio},data-stock=${producto.cantidad}"
             style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
             <div class="card-image">
               <figure class="image is-4by5"><img th:src="@{'/' + ${producto.imagenSrc}}" class="producto-imagen"
@@ -398,7 +399,7 @@
                 <span class="has-text-danger has-text-weight-bold is-size-5"
                   th:text="'S/. ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">S/. 0.00</span>
               </div>
-              <button class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
+              <p class="help mb-2" th:text="${producto.cantidad == 0 ? 'Agotado' : 'Disponibles: ' + producto.cantidad}"></p><button th:disabled="${producto.cantidad == 0}" class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
                 CARRITO</button>
             </div>
           </div>
@@ -416,7 +417,7 @@
       </div>
       <div class="columns is-multiline">
         <div class="column is-3" th:each="producto : ${productosFutbol}">
-          <div class="card"
+          <div class="card" th:attr="data-producto-id=${producto.id},data-precio=${producto.precio},data-stock=${producto.cantidad}"
             style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
             <div class="card-image">
               <figure class="image is-4by5"><img th:src="@{'/' + ${producto.imagenSrc}}" class="producto-imagen"
@@ -430,7 +431,7 @@
                 <span class="has-text-danger has-text-weight-bold is-size-5"
                   th:text="'S/. ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">S/. 0.00</span>
               </div>
-              <button class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
+              <p class="help mb-2" th:text="${producto.cantidad == 0 ? 'Agotado' : 'Disponibles: ' + producto.cantidad}"></p><button th:disabled="${producto.cantidad == 0}" class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
                 CARRITO</button>
             </div>
           </div>
@@ -448,7 +449,7 @@
       </div>
       <div class="columns is-multiline">
         <div class="column is-3" th:each="producto : ${productosAccesorios}">
-          <div class="card"
+          <div class="card" th:attr="data-producto-id=${producto.id},data-precio=${producto.precio},data-stock=${producto.cantidad}"
             style="border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); height: 100%; display: flex; flex-direction: column;">
             <div class="card-image">
               <figure class="image is-4by5"><img th:src="@{'/' + ${producto.imagenSrc}}" class="producto-imagen"
@@ -462,7 +463,7 @@
                 <span class="has-text-danger has-text-weight-bold is-size-5"
                   th:text="'S/. ' + ${#numbers.formatDecimal(producto.precio, 1, 2)}">S/. 0.00</span>
               </div>
-              <button class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
+              <p class="help mb-2" th:text="${producto.cantidad == 0 ? 'Agotado' : 'Disponibles: ' + producto.cantidad}"></p><button th:disabled="${producto.cantidad == 0}" class="button is-dark is-fullwidth is-rounded has-text-weight-bold py-4">AÑADIR AL
                 CARRITO</button>
             </div>
           </div>
@@ -624,18 +625,18 @@
         </div>
 
         <div class="has-text-centered mb-4">
-          <p class="subtitle is-6 has-text-grey">Inicia sesión o regístrate en segundos para activar tu cupón exclusivo
-            en tu primera compra de ropa.</p>
+          <p class="subtitle is-6 has-text-grey">Inicia sesión o regístrate para consultar tus compras
+            y administrar tu cuenta.</p>
         </div>
 
         <!-- Formulario de Inicio de Sesión -->
-        <form id="form-login-modal" novalidate>
+        <p id="login-error" class="notification is-danger" role="alert" hidden></p><form id="form-login-modal">
 
           <!-- Campo Correo -->
           <div class="field mb-3">
             <label class="label is-size-7 has-text-weight-semibold">Correo Electrónico</label>
             <div class="control has-icons-left">
-              <input class="input is-radiusless py-4" type="email" id="login-correo" placeholder="ejemplo@correo.com">
+              <input class="input is-radiusless py-4" type="email" id="login-correo" required maxlength="150" autocomplete="username" placeholder="ejemplo@correo.com">
               <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
             </div>
             <p class="help is-danger is-hidden" id="error-login-correo"></p>
@@ -645,7 +646,7 @@
           <div class="field mb-4">
             <label class="label is-size-7 has-text-weight-semibold">Contraseña</label>
             <div class="control has-icons-left">
-              <input class="input is-radiusless py-4" type="password" id="login-pass" placeholder="••••••••">
+              <input class="input is-radiusless py-4" type="password" id="login-pass" required maxlength="72" autocomplete="current-password" placeholder="••••••••">
               <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
             </div>
             <p class="help is-danger is-hidden" id="error-login-pass"></p>
@@ -653,7 +654,7 @@
 
           <!-- Botón de Envío -->
           <button type="submit" class="button is-black is-fullwidth is-radiusless has-text-weight-bold py-4 mb-3">
-            INICIAR SESIÓN Y CANJEAR
+            INICIAR SESIÓN
           </button>
 
           <!-- Texto secundario de Registro rápido -->
@@ -687,13 +688,13 @@
         </div>
 
         <!-- Formulario de Registro con validación deshabilitada nativamente -->
-        <form id="form-registro-modal" novalidate>
+        <p id="registro-error" class="notification is-danger" role="alert" hidden></p><form id="form-registro-modal">
 
           <!-- Campo Nombres -->
           <div class="field mb-3">
             <label class="label is-size-7 has-text-weight-semibold">Nombres y Apellidos</label>
             <div class="control has-icons-left">
-              <input class="input is-radiusless py-4" type="text" id="reg-nombre" placeholder="Juan Pérez">
+              <input class="input is-radiusless py-4" type="text" id="reg-nombre" required minlength="3" maxlength="100" autocomplete="name" placeholder="Juan Pérez">
               <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
             </div>
             <p class="help is-danger is-hidden" id="error-reg-nombre"></p>
@@ -703,7 +704,7 @@
           <div class="field mb-3">
             <label class="label is-size-7 has-text-weight-semibold">Correo Electrónico</label>
             <div class="control has-icons-left">
-              <input class="input is-radiusless py-4" type="email" id="reg-correo" placeholder="ejemplo@correo.com">
+              <input class="input is-radiusless py-4" type="email" id="reg-correo" required maxlength="150" autocomplete="email" placeholder="ejemplo@correo.com">
               <span class="icon is-small is-left"><i class="fas fa-envelope"></i></span>
             </div>
             <p class="help is-danger is-hidden" id="error-reg-correo"></p>
@@ -711,9 +712,9 @@
 
           <!-- Campo Contraseña -->
           <div class="field mb-4">
-            <label class="label is-size-7 has-text-weight-semibold">Contraseña (Mínimo 6 caracteres)</label>
+            <label class="label is-size-7 has-text-weight-semibold">Contraseña (8 a 72 caracteres)</label>
             <div class="control has-icons-left">
-              <input class="input is-radiusless py-4" type="password" id="reg-pass" placeholder="••••••••">
+              <input class="input is-radiusless py-4" type="password" id="reg-pass" required minlength="8" maxlength="72" autocomplete="new-password" placeholder="••••••••">
               <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
             </div>
             <p class="help is-danger is-hidden" id="error-reg-pass"></p>
@@ -721,7 +722,7 @@
 
           <!-- Botón de Envío -->
           <button type="submit" class="button is-black is-fullwidth is-radiusless has-text-weight-bold py-4 mb-3">
-            REGISTRARME Y CANJEAR CUPÓN
+            CREAR CUENTA
           </button>
 
           <!-- Enlace para regresar al Login -->
@@ -747,13 +748,13 @@
         <span class="icon is-large has-text-success mb-3">
           <i class="fas fa-bag-shopping fa-3x"></i>
         </span>
-        <h3 class="title is-4 has-text-weight-bold mb-2">¡Pago efectuado con éxito!</h3>
+        <h3 class="title is-4 has-text-weight-bold mb-2">¡Pedido registrado!</h3>
         <p class="subtitle is-6 has-text-grey mb-4">
-          Muchas gracias por tu compra en <strong>LINK SPORT</strong>. Tu pedido ya está siendo procesado y preparado
-          para el envío nacional.
+          Tu pedido en <strong>LINK SPORT</strong> está pendiente de pago contra entrega. Conserva el número de pedido
+          para cualquier consulta. No se ha realizado ningún cobro.
         </p>
         <button class="button is-dark is-rounded px-5 has-text-weight-bold"
-          id="modal-compra-btn-aceptar">Aceptar</button>
+          id="modal-compra-btn-aceptar">Aceptar</button><a class="button is-info is-light mt-3" href="/mis-pedidos">Consultar mis pedidos</a>
       </div>
     </div>
     <button class="modal-close is-large" id="modal-compra-x-close" aria-label="close"></button>
@@ -870,7 +871,39 @@
   </footer>
 
 
-  <script th:src="@{/js/script.js}"></script>
+  <div class="modal" id="modal-checkout" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+    <div class="modal-background"></div>
+    <div class="modal-card" style="width: min(720px, 96vw)">
+      <header class="modal-card-head"><h2 class="modal-card-title" id="checkout-title">Datos de entrega</h2><button type="button" class="delete" id="checkout-close" aria-label="Cerrar compra"></button></header>
+      <section class="modal-card-body">
+        <p class="mb-4">1. Datos de entrega → 2. Revisar y confirmar</p>
+        <p id="checkout-error" class="notification is-danger" role="alert" hidden></p>
+        <form id="checkout-form">
+          <div id="checkout-datos">
+            <div class="field"><label class="label" for="checkout-nombre">Nombre y apellidos</label><input class="input" id="checkout-nombre" name="nombre" autocomplete="name" required minlength="3" maxlength="100"></div>
+            <div class="field"><label class="label" for="checkout-correo">Correo electrónico</label><input class="input" id="checkout-correo" name="correo" type="email" autocomplete="email" required maxlength="150"></div>
+            <div class="field"><label class="label" for="checkout-telefono">Celular (Perú)</label><input class="input" id="checkout-telefono" name="telefono" type="tel" autocomplete="tel-national" inputmode="numeric" pattern="9[0-9]{8}" required maxlength="9" placeholder="987654321"><p class="help">9 dígitos, comenzando por 9.</p></div>
+            <div class="field"><label class="label" for="checkout-ciudad">Departamento, provincia y distrito</label><input class="input" id="checkout-ciudad" name="ciudad" autocomplete="address-level2" required minlength="2" maxlength="100"></div>
+            <div class="field"><label class="label" for="checkout-direccion">Dirección completa y referencia de entrega</label><textarea class="textarea" id="checkout-direccion" name="direccion" autocomplete="street-address" required minlength="10" maxlength="250"></textarea></div>
+            <div class="notification is-info is-light"><strong>Pago contra entrega</strong><p>Pagarás al recibir el pedido. No se te cobrará al confirmar. Envío sin costo adicional.</p></div>
+          </div>
+          <div id="checkout-revision" hidden>
+            <h3 class="title is-5">Revisa tu pedido</h3>
+            <div id="checkout-resumen"></div>
+            <p class="my-4" id="checkout-entrega"></p>
+            <p class="has-text-weight-bold mb-4" id="checkout-total"></p>
+            <p class="mb-4">Método de pago: contra entrega. Estado inicial: pendiente de pago. Envío: S/. 0.00.</p>
+            <label class="checkbox"><input id="checkout-confirmacion" type="checkbox"> Confirmo mis datos, los productos y el importe que pagaré al recibir el pedido.</label>
+          </div>
+          <div class="buttons mt-5"><button type="button" class="button" id="checkout-volver" hidden>Editar datos</button><button class="button is-black" id="checkout-continuar" type="submit">Revisar pedido</button></div>
+        </form>
+      </section>
+    </div>
+  </div>
+  <script th:src="@{/js/seguridad.js}"></script><script th:src="@{/js/auth-ui.js}"></script>
+<script th:src="@{/js/script.js}"></script>
+  <script th:src="@{/js/pedidos-store.js}"></script>
+  <script th:src="@{/js/checkout.js}"></script>
 
 
 </body>

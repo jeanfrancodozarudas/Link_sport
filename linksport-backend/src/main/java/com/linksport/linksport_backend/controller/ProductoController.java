@@ -5,68 +5,34 @@ import com.linksport.linksport_backend.model.Producto;
 import com.linksport.linksport_backend.service.ProductoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/productos")
-@CrossOrigin(origins = "*")
+
 public class ProductoController {
-
-    private final ProductoService productoService;
-
-    public ProductoController(ProductoService productoService) {
-        this.productoService = productoService;
-    }
-
+    private final ProductoService productos;
+    public ProductoController(ProductoService productos) { this.productos = productos; }
     @GetMapping
-    public List<Producto> listarProductos() {
-        return productoService.obtenerTodos();
+    public List<ProductoDatos> listar() {
+        return productos.obtenerTodos().stream().filter(Producto::isActivo).map(ProductoDatos::de).toList();
     }
-
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProducto(@PathVariable Long id) {
-        Optional<Producto> p = productoService.buscarPorId(id);
-        return p.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProductoDatos> obtener(@PathVariable Long id) {
+        return productos.buscarPorId(id).filter(Producto::isActivo).map(ProductoDatos::de)
+            .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
     @PostMapping
-    public ResponseEntity<?> crearProducto(@Valid @RequestBody Producto producto) {
-        // CORRECCIÓN INTERACTIVA: Comprueba si el nombre ya existe dentro de la MISMA
-        // categoría
-        boolean duplicadoEnMismaCategoria = productoService.obtenerTodos().stream()
-                .anyMatch(p -> p.getNombre().equalsIgnoreCase(producto.getNombre())
-                        && p.getCategoria() != null
-                        && producto.getCategoria() != null
-                        && p.getCategoria().getId().equals(producto.getCategoria().getId()));
-
-        if (duplicadoEnMismaCategoria) {
-            return ResponseEntity.badRequest().body("Error: Este producto ya está registrado en esta sección.");
-        }
-
-        Producto nuevo = productoService.guardar(producto);
-        return ResponseEntity.ok(nuevo);
+    public ProductoDatos crear(@Valid @RequestBody Producto datos) {
+        datos.setId(null); datos.setVersion(null);
+        return ProductoDatos.de(productos.guardar(datos));
     }
-
     @PutMapping("/{id}")
-    public ResponseEntity<Producto> modificarProducto(@PathVariable Long id, @Valid @RequestBody Producto producto) {
-        producto.setId(id);
-        Producto actualizado = productoService.actualizar(id, producto);
-        return actualizado != null ? ResponseEntity.ok(actualizado) : ResponseEntity.notFound().build();
+    public ProductoDatos actualizar(@PathVariable Long id, @Valid @RequestBody Producto datos) {
+        return ProductoDatos.de(productos.actualizar(id, datos));
     }
-
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> borrarProducto(@PathVariable Long id) {
-        if (productoService.eliminar(id)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping("/procesar-pago")
-    public ResponseEntity<Void> procesarPagoWeb(@RequestBody List<Producto> carrito) {
-        productoService.registrarVentaDesdeWeb(carrito);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Void> retirar(@PathVariable Long id) {
+        return productos.eliminar(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 }

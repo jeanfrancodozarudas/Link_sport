@@ -13,6 +13,10 @@ public class DetalleVenta {
     @Column(nullable = false)
     private int cantidad;
 
+    private String nombreProducto;
+    public String getNombreProducto() { return nombreProducto; }
+    public void setNombreProducto(String value) { nombreProducto = value; }
+
     @Column(nullable = false)
     private double precioUnitario;
 

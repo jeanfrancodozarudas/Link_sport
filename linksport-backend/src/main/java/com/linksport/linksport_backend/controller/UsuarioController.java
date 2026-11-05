@@ -1,38 +1,16 @@
 package com.linksport.linksport_backend.controller;
-
-import com.linksport.linksport_backend.model.Usuario;
 import com.linksport.linksport_backend.service.UsuarioService;
-import org.springframework.http.ResponseEntity;
+import com.linksport.linksport_backend.security.UsuarioActual;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 
 @RestController
 @RequestMapping("/api/usuarios")
-@CrossOrigin(origins = "*")
 public class UsuarioController {
-
-    private final UsuarioService usuarioService;
-
-    public UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
-    }
-
-    // Listar todos los usuarios registrados 
-    @GetMapping
-    public List<Usuario> listarUsuarios() {
-        return usuarioService.obtenerTodos();
-    }
-
-    // Ruta POST encargada de procesar el Registro de una nueva cuenta
-    @PostMapping("/registro")
-    public ResponseEntity<Usuario> registrarUsuario(@RequestBody Usuario usuario) {
-        if (usuarioService.buscarPorCorreo(usuario.getCorreo()).isPresent()) {
-            return ResponseEntity.badRequest().build(); // Evita correos duplicados
-        }
-        Usuario nuevoUsuario = usuarioService.registrar(usuario);
-        return ResponseEntity.ok(nuevoUsuario);
-    }
+    private final UsuarioService usuarios;
+    public UsuarioController(UsuarioService usuarios) { this.usuarios=usuarios; }
+    @GetMapping public List<UsuarioActual> listar() { return usuarios.obtenerTodos(); }
+    // Compatibilidad con la ruta anterior, sin aceptar rol ni devolver credenciales.
+    @PostMapping("/registro") public UsuarioActual registrar(@Valid @RequestBody AuthDatos.Registro datos) { return UsuarioActual.de(usuarios.registrar(datos)); }
 }
-

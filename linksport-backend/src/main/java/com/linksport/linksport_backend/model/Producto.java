@@ -26,6 +26,7 @@ public class Producto {
     private String imagenSrc;
 
     @Column(nullable = false)
+    @Min(value = 0, message = "Las existencias no pueden ser negativas.")
     private int cantidad;
 
     @Column(nullable = false)
@@ -34,6 +35,18 @@ public class Producto {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id", nullable = true)
     private Categoria categoria;
+
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean activo = true;
+
+    @Version
+    @Column(columnDefinition = "bigint default 0")
+    private Long version;
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean value) { activo = value; }
+    public Long getVersion() { return version; }
+    public void setVersion(Long value) { version = value; }
 
     // Constructor vacío obligatorio para JPA e Hibernate
     public Producto() {

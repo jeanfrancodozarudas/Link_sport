@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         carouselBox.addEventListener('mouseleave', () => autoPlayInterval = setInterval(window.nextSlide, 4000));
     }
 
+    const escapar = valor => String(valor).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
     // 3. MOTOR INTERNO DEL CARRITO LATERAL (SIDEBAR)
     const sidebarCart = document.getElementById('carrito-sidebar');
     const overlayCart = document.getElementById('carrito-overlay');
@@ -67,10 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnCerrarCart) btnCerrarCart.addEventListener('click', window.cerrarPanelCarrito);
     if (overlayCart) overlayCart.addEventListener('click', window.cerrarPanelCarrito);
 
-    window.anadirProductoAMemoria = function (nombre, precio, imagen) {
-        const productoExistente = productosEnCarrito.find(item => item.nombre === nombre);
-        if (productoExistente) { productoExistente.cantidad++; }
-        else { productosEnCarrito.push({ nombre: nombre, precio: precio, imagen: imagen, cantidad: 1 }); }
+    window.anadirProductoAMemoria = function (id, nombre, precio, imagen, stock) {
+        if (!Number.isInteger(stock) || stock <= 0) { alert('Este producto está agotado.'); return; }
+        const productoExistente = productosEnCarrito.find(item => item.id === id);
+        if (productoExistente) { if (productoExistente.cantidad >= Math.min(99, stock)) { alert('No hay más unidades disponibles de este producto.'); return; } productoExistente.cantidad++; }
+        else { productosEnCarrito.push({ id: id, nombre: nombre, precio: precio, imagen: imagen, cantidad: 1, stock: stock }); }
         actualizarPantallaCarrito();
     };
 
@@ -89,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             unidadesTotales += producto.cantidad;
             const itemHTML = document.createElement('div');
             itemHTML.className = "carrito-item-box py-3 mb-2";
-            itemHTML.innerHTML = `<img src="${producto.imagen}" class="carrito-item-img mr-3"><div style="flex-grow:1;"><h4 class="is-size-7 has-text-weight-bold has-text-dark mb-1">${producto.nombre}</h4><p class="is-size-7 has-text-danger has-text-weight-bold mb-2">S/. ${producto.precio.toFixed(2)}</p><div class="is-flex is-align-items-center"><button class="btn-cantidad-control" onclick="modificarCantidadItem(${indice},-1)">-</button><span class="px-3 is-size-7 has-text-weight-bold">${producto.cantidad}</span><button class="btn-cantidad-control" onclick="modificarCantidadItem(${indice},1)">+</button></div></div><button class="button is-small is-text has-text-grey" onclick="eliminarItemCompleto(${indice})" style="position:absolute;right:0;top:35%;"><span class="icon"><i class="fas fa-trash-can"></i></span></button>`;
+            itemHTML.innerHTML = `<img src="${escapar(producto.imagen)}" class="carrito-item-img mr-3"><div style="flex-grow:1;"><h4 class="is-size-7 has-text-weight-bold has-text-dark mb-1">${escapar(producto.nombre)}</h4><p class="is-size-7 has-text-danger has-text-weight-bold mb-2">S/. ${producto.precio.toFixed(2)}</p><div class="is-flex is-align-items-center"><button class="btn-cantidad-control" onclick="modificarCantidadItem(${indice},-1)">-</button><span class="px-3 is-size-7 has-text-weight-bold">${producto.cantidad}</span><button class="btn-cantidad-control" onclick="modificarCantidadItem(${indice},1)">+</button></div></div><button class="button is-small is-text has-text-grey" onclick="eliminarItemCompleto(${indice})" style="position:absolute;right:0;top:35%;"><span class="icon"><i class="fas fa-trash-can"></i></span></button>`;
             listaProductosCart.appendChild(itemHTML);
         });
         txtSubtotalCart.textContent = `S/. ${totalCalculado.toFixed(2)}`;
@@ -98,7 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.modificarCantidadItem = function (indice, cambio) {
-        productosEnCarrito[indice].cantidad += cambio;
+        if (!productosEnCarrito[indice]) return;
+        if (cambio > 0 && productosEnCarrito[indice].cantidad >= Math.min(99, productosEnCarrito[indice].stock)) { alert('No hay más unidades disponibles de este producto.'); return; }
+        productosEnCarrito[indice].cantidad = Math.min(99, productosEnCarrito[indice].stock, productosEnCarrito[indice].cantidad + cambio);
         if (productosEnCarrito[indice].cantidad <= 0) { productosEnCarrito.splice(indice, 1); }
         actualizarPantallaCarrito();
     };
@@ -106,57 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
         productosEnCarrito.splice(indice, 1);
         actualizarPantallaCarrito();
     };
-    // 4. MODAL DE PROCEDER AL PAGO (CONEXIÓN DIRECTA A POSTGRESQL)
-    const btnPago = document.getElementById('btn-proceder-pago');
-    const modalCompra = document.getElementById('modal-compra-exitosa');
-    if (btnPago && modalCompra) {
-        btnPago.addEventListener('click', () => {
-            if (productosEnCarrito.length === 0) { alert("Tu carrito está vacío."); return; }
-
-            // BUSCAMOS LOS IDs REALES DE LAS FILAS DE THYMELEAF
-            const tarjetas = document.querySelectorAll('#productos .card');
-            const mapeoProductos = productosEnCarrito.map(item => {
-                let idEncontrado = 1; // ID por defecto
-                tarjetas.forEach((tarjeta, indice) => {
-                    const nombreTarjeta = tarjeta.querySelector('h3').textContent.trim();
-                    if (nombreTarjeta === item.nombre) {
-                        idEncontrado = indice + 1; // Asocia el ID correlativo de la BD (1, 2, 3, 4)
-                    }
-                });
-                return {
-                    id: idEncontrado,
-                    nombre: item.nombre,
-                    precio: item.precio,
-                    cantidad: item.cantidad,
-                    imagenSrc: item.imagen
-                };
-            });
-
-            // ENVIAMOS LA ORDEN REAL MEDIANTE FETCH AL BACKEND DE SPRING BOOT
-            fetch('/api/productos/procesar-pago', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(mapeoProductos)
-            })
-                .then(res => {
-                    if (!res.ok) throw new Error("Error procesando pago");
-                    window.cerrarPanelCarrito();
-                    modalCompra.classList.add('is-active');
-                    productosEnCarrito = [];
-                    actualizarPantallaCarrito();
-                    console.log("¡Compra registrada automáticamente en las tablas de PostgreSQL!");
-                })
-                .catch(err => alert("Error al registrar la transacción en la base de datos."));
-        });
-
-        const btnAceptarCompra = document.getElementById('modal-compra-btn-aceptar');
-        const btnXCompra = document.getElementById('modal-compra-x-close');
-        const bgCloseCompra = document.getElementById('modal-compra-bg-close');
-        const cerrarModalCompra = () => modalCompra.classList.remove('is-active');
-        if (btnAceptarCompra) btnAceptarCompra.addEventListener('click', cerrarModalCompra);
-        if (btnXCompra) btnXCompra.addEventListener('click', cerrarModalCompra);
-        if (bgCloseCompra) bgCloseCompra.addEventListener('click', cerrarModalCompra);
-    }
+    window.linkCheckout = {
+        items: () => productosEnCarrito.map(p => ({ ...p })),
+        clear: () => { productosEnCarrito = []; actualizarPantallaCarrito(); }
+    };
     // 5. FORMULARIO DE SUSCRIPCIÓN TRADICIONAL
     const formSuscripcion = document.getElementById('form-suscripcion');
     const modalConfirm = document.getElementById('modal-confirmacion');
@@ -165,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             evento.preventDefault();
             const nombre = document.getElementById('input-nombre').value.trim();
             const correo = document.getElementById('input-correo').value.trim();
-            document.getElementById('modal-mensaje-texto').innerHTML = `¡Hola <strong>${nombre}</strong>! Bienvenido a LINKSPORT. Cupones enviados a <strong>${correo}</strong>.`;
+            document.getElementById('modal-mensaje-texto').textContent = `Hola ${nombre}. Recibimos tus datos de suscripción: ${correo}.`;
             modalConfirm.classList.add('is-active');
             formSuscripcion.reset();
         });
@@ -176,45 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (btnAceptar) btnAceptar.addEventListener('click', cerrarModal);
         if (btnX) btnX.addEventListener('click', cerrarModal);
         if (bgClose) bgClose.addEventListener('click', cerrarModal);
-    }
-
-    // 6. CONTROL DE LOGIN Y REGISTRO (CONECTADOS)
-    const modalLogin = document.getElementById('modal-login-oferta');
-    const modalReg = document.getElementById('modal-registro-usuario');
-    const btnAbrirLogin = document.getElementById('btn-usuario-login');
-    const btnXLogin = document.getElementById('modal-login-x-close');
-    const bgCloseLogin = document.getElementById('modal-login-bg-close');
-    const formLogin = document.getElementById('form-login-modal');
-    const linkIrARegistro = document.getElementById('link-ir-a-registro');
-    const linkIrALogin = document.getElementById('link-ir-a-login');
-    const btnXReg = document.getElementById('modal-reg-x-close');
-    const bgCloseReg = document.getElementById('modal-reg-bg-close');
-    const formRegistro = document.getElementById('form-registro-modal');
-    const abrirLogin = () => modalLogin.classList.add('is-active');
-    const cerrarLogin = () => modalLogin.classList.remove('is-active');
-    const abrirRegistro = () => modalReg.classList.add('is-active');
-    const cerrarRegistro = () => modalReg.classList.remove('is-active');
-
-    setTimeout(() => { if (modalLogin) abrirLogin(); }, 2000);
-    if (btnAbrirLogin) btnAbrirLogin.addEventListener('click', (e) => { e.preventDefault(); abrirLogin(); });
-    if (btnXLogin) btnXLogin.addEventListener('click', cerrarLogin);
-    if (bgCloseLogin) bgCloseLogin.addEventListener('click', cerrarLogin);
-    if (linkIrARegistro) linkIrARegistro.addEventListener('click', (e) => { e.preventDefault(); cerrarLogin(); abrirRegistro(); });
-    if (linkIrALogin) linkIrALogin.addEventListener('click', (e) => { e.preventDefault(); cerrarRegistro(); abrirLogin(); });
-    if (btnXReg) btnXReg.addEventListener('click', cerrarRegistro);
-    if (bgCloseReg) bgCloseReg.addEventListener('click', cerrarRegistro);
-
-    if (formLogin) {
-        formLogin.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert("¡Sesión Iniciada con éxito!"); cerrarLogin(); formLogin.reset();
-        });
-    }
-    if (formRegistro) {
-        formRegistro.addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert("¡Registro Exitoso!"); cerrarRegistro(); formRegistro.reset();
-        });
     }
 
     // 7. DETECTOR DE CLICS CORREGIDO COMPATIBLE CON THYMELEAF Y REJILLAS BULMA
@@ -231,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const imagenSrc = tarjetaProducto.querySelector('img').getAttribute('src');
                 const precio = parseFloat(precioTexto.replace('S/.', '').trim());
 
-                window.anadirProductoAMemoria(nombre, precio, imagenSrc);
+                window.anadirProductoAMemoria(Number(tarjetaProducto.dataset.productoId), nombre, Number(tarjetaProducto.dataset.precio), imagenSrc, Number(tarjetaProducto.dataset.stock));
                 window.abrirPanelCarrito();
             });
         });

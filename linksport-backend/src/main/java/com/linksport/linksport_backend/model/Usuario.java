@@ -25,6 +25,20 @@ public class Usuario {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "varchar(20) default 'CLIENTE'")
+    private Rol rol = Rol.CLIENTE;
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean activo = true;
+    @Column(nullable = false, columnDefinition = "bigint default 0")
+    private long tokenVersion;
+    public Rol getRol() { return rol; }
+    public void setRol(Rol value) { rol = value; }
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean value) { activo = value; }
+    public long getTokenVersion() { return tokenVersion; }
+    public void setTokenVersion(long value) { tokenVersion = value; }
+
     // Constructor vacío obligatorio para JPA e Hibernate
     public Usuario() {
     }

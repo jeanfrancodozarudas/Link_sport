@@ -1,106 +1,59 @@
 package com.linksport.linksport_backend.service;
 
-import com.linksport.linksport_backend.model.Producto;
-import com.linksport.linksport_backend.model.Venta;
-import com.linksport.linksport_backend.model.DetalleVenta;
-import com.linksport.linksport_backend.repository.ProductoRepository;
-import com.linksport.linksport_backend.repository.VentaRepository;
-import com.linksport.linksport_backend.repository.UsuarioRepository;
+import com.linksport.linksport_backend.model.*;
+import com.linksport.linksport_backend.repository.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class ProductoService {
-
-    private final ProductoRepository productoRepository;
-    private final VentaRepository ventaRepository;
-    private final UsuarioRepository usuarioRepository;
-
-    // Capa de Servicio: Inyección por Constructor requerida para la rúbrica de la
-    // UTP
-    public ProductoService(ProductoRepository productoRepository,
-            VentaRepository ventaRepository,
-            UsuarioRepository usuarioRepository) {
-        this.productoRepository = productoRepository;
-        this.ventaRepository = ventaRepository;
-        this.usuarioRepository = usuarioRepository;
+    private final ProductoRepository productos;
+    private final CategoriaRepository categorias;
+    public ProductoService(ProductoRepository productos, CategoriaRepository categorias) {
+        this.productos = productos; this.categorias = categorias;
     }
+    public List<Producto> obtenerTodos() { return productos.findAll(); }
+    public List<Categoria> obtenerCategorias() { return categorias.findAll(); }
+    public Optional<Producto> buscarPorId(Long id) { return productos.findById(id); }
 
-    // ==========================================================================
-    // MÉTODOS DEL CATALOGO DE PRODUCTOS (CRUD EN BASE DE DATO REAL)
-    // ==========================================================================
-    public List<Producto> obtenerTodos() {
-        return productoRepository.findAll();
+    @Transactional
+    public Producto guardar(Producto datos) {
+        return persistir(datos.getId(), datos);
     }
+    @Transactional
+    public Producto actualizar(Long id, Producto datos) { return persistir(id, datos); }
 
-    public Optional<Producto> buscarPorId(Long id) {
-        return productoRepository.findById(id);
+    private Producto persistir(Long id, Producto datos) {
+        Producto p = id == null ? new Producto() : productos.findByIdForUpdate(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El producto no existe."));
+        if (id != null && (datos.getVersion() == null || !Objects.equals(p.getVersion(), datos.getVersion())))
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "El inventario cambió. Recarga el producto antes de guardar para no sobrescribir existencias.");
+        String nombre = datos.getNombre() == null ? "" : datos.getNombre().trim();
+        if (productos.existsByNombreIgnoreCaseAndIdNot(nombre, id == null ? -1L : id))
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Ya existe un producto con ese nombre. Usa un nombre distinto.");
+        if (datos.getCategoria() == null || datos.getCategoria().getId() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Selecciona una categoría.");
+        Categoria categoria = categorias.findById(datos.getCategoria().getId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "La categoría no existe."));
+        if (nombre.length() < 3 || nombre.length() > 100 || !Double.isFinite(datos.getPrecio()) || datos.getPrecio() < 1 || datos.getCantidad() < 0)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Revisa nombre, precio y existencias.");
+        p.setNombre(nombre); p.setPrecio(datos.getPrecio()); p.setImagenSrc(datos.getImagenSrc().trim());
+        p.setCantidad(datos.getCantidad()); p.setCategoria(categoria);
+        p.setDestacado(datos.isDestacado()); p.setActivo(datos.isActivo());
+        return productos.saveAndFlush(p);
     }
-
-    public Producto guardar(Producto producto) {
-        return productoRepository.save(producto);
-    }
-
-    public Producto actualizar(Long id, Producto datosActualizados) {
-        Optional<Producto> productoOpt = buscarPorId(id);
-        if (productoOpt.isPresent()) {
-            Producto p = productoOpt.get();
-            p.setNombre(datosActualizados.getNombre());
-            p.setPrecio(datosActualizados.getPrecio());
-            p.setImagenSrc(datosActualizados.getImagenSrc());
-            return productoRepository.save(p);
-        }
-        return null;
-    }
-
+    // Retirar conserva los detalles de ventas y permite reactivar desde el panel.
+    @Transactional
     public boolean eliminar(Long id) {
-        if (productoRepository.existsById(id)) {
-            productoRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    // ==========================================================================
-    // MOTOR MAESTRO: RECIBE EL CARRITO WEB Y LO PERSISTE EN POSTGRESQL
-    // ==========================================================================
-    public void registrarVentaDesdeWeb(List<Producto> carrito) {
-        if (carrito == null || carrito.isEmpty())
-            return;
-
-        // 1. Buscamos al usuario de pruebas ID 1 que inyectamos en el import.sql
-        var usuarioOpt = usuarioRepository.findById(1L);
-        if (usuarioOpt.isEmpty())
-            return;
-
-        // 2. Instanciamos la cabecera principal de la Venta
-        Venta nuevaVenta = new Venta();
-        nuevaVenta.setUsuario(usuarioOpt.get());
-
-        // Calculamos el monto acumulado del carrito enviado desde internet
-        double totalCalculado = 0;
-        for (Producto p : carrito) {
-            totalCalculado += p.getPrecio() * p.getCantidad();
-        }
-        nuevaVenta.setTotalPagar(totalCalculado);
-
-        // 3. Recorremos el carrito y poblamos la lista de detalles relacionales
-        for (Producto p : carrito) {
-            var productoRealOpt = productoRepository.findById(p.getId());
-            if (productoRealOpt.isPresent()) {
-                DetalleVenta detalle = new DetalleVenta();
-                detalle.setVenta(nuevaVenta);
-                detalle.setProducto(productoRealOpt.get());
-                detalle.setCantidad(p.getCantidad());
-                detalle.setPrecioUnitario(productoRealOpt.get().getPrecio());
-
-                // Agregamos el item a la colección en cascada
-                nuevaVenta.getDetalles().add(detalle);
-            }
-        }
-
-        // 4. Se persisten ambas estructuras vinculadas en PostgreSQL de golpe
-        ventaRepository.save(nuevaVenta);
+        var encontrado = productos.findByIdForUpdate(id);
+        if (encontrado.isEmpty()) return false;
+        encontrado.get().setActivo(false);
+        productos.flush();
+        return true;
     }
 }

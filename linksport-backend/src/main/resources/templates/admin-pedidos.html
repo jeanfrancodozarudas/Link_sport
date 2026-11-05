@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pedidos | Link Sport</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.4/css/bulma.min.css"><style>[hidden] { display: none !important; }</style></head>
+<body class="has-background-light">
+<div class="container px-4 py-3"><div class="is-flex is-flex-wrap-wrap is-align-items-center" style="gap: .75rem"><span data-cuenta></span><a data-login href="/login">Iniciar sesión / registrarse</a><a data-admin href="/ver-productos" hidden>Administración</a><a data-admin href="/ver-usuarios" hidden>Usuarios</a><a href="/mis-pedidos">Mis pedidos</a><button data-logout class="button is-small" type="button" hidden>Cerrar sesión</button></div><p id="sesion-status" class="help" role="status"></p></div><main class="section"><div class="container">
+<nav class="buttons" aria-label="Administración"><a class="button" href="/">Tienda</a><a class="button" href="/ver-productos">Productos e inventario</a><a class="button is-dark" href="/admin/pedidos">Pedidos</a></nav>
+<h1 class="title">Gestión de pedidos</h1><p class="subtitle">Prepara los pedidos, registra su entrega y confirma el cobro contra entrega.</p>
+<div id="pedidos-error" class="notification is-danger" role="alert" hidden></div><p id="pedidos-status" role="status" class="mb-4"></p>
+<div class="box"><div class="field"><label class="label" for="filtro-entrega">Estado de entrega</label><div class="select"><select id="filtro-entrega"><option value="">Todos</option><option value="REGISTRADO">Registrado</option><option value="PREPARANDO">Preparando</option><option value="EN_CAMINO">En camino</option><option value="ENTREGADO">Entregado</option><option value="CANCELADO">Cancelado</option></select></div><button class="button ml-2" id="pedidos-refrescar">Actualizar</button></div>
+<div class="table-container"><table class="table is-fullwidth is-striped"><thead><tr><th>Pedido</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Entrega</th><th>Pago</th><th></th></tr></thead><tbody id="pedidos-lista"></tbody></table></div>
+<div class="buttons"><button class="button" id="pagina-anterior">Anterior</button><span id="pagina-texto" class="mx-3"></span><button class="button" id="pagina-siguiente">Siguiente</button></div></div>
+<section id="pedido-detalle" class="box" hidden aria-labelledby="pedido-titulo"><h2 id="pedido-titulo" class="title is-4" tabindex="-1"></h2><div id="pedido-contenido"></div>
+<form id="pedido-estado-form" class="mt-5"><div class="field"><label class="label" for="pedido-nuevo-estado">Siguiente estado</label><div class="select"><select id="pedido-nuevo-estado" required></select></div></div>
+<div class="field"><label class="label" for="pedido-observacion">Observación / motivo del cambio</label><textarea class="textarea" id="pedido-observacion" required maxlength="300" rows="2"></textarea></div>
+<div class="field" id="pedido-cobro-field" hidden><label class="checkbox"><input type="checkbox" id="pedido-cobro"> Confirmo que se recibió el importe completo contra entrega.</label></div>
+<button class="button is-dark" id="pedido-guardar" type="submit">Guardar cambio</button></form></section>
+</div></main><script th:src="@{/js/seguridad.js}"></script><script th:src="@{/js/auth-ui.js}"></script>
+<script th:src="@{/js/pedidos-ui.js}"></script><script th:src="@{/js/admin-pedidos.js}"></script></body></html>

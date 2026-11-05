@@ -23,6 +23,5 @@ INSERT INTO productos (nombre, precio, imagen_src, cantidad, categoria_id, desta
 INSERT INTO productos (nombre, precio, imagen_src, cantidad, categoria_id, destacado) VALUES ('Guantes de Gimnasio Grip Pro', 35.00, 'imagenes/producto12.jpg', 1, 3, false);
 
 -- 5. REGISTRO DE USUARIOS BASE
-INSERT INTO usuarios (nombre, correo, password) VALUES ('Juan Pérez Linksport', 'juan@linksport.com', '123456');
 
 

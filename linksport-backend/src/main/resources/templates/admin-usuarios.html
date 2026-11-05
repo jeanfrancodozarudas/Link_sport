@@ -26,8 +26,9 @@
       padding: 1.5rem;
     }
   </style>
-</head>
+<style>[hidden] { display: none !important; }</style></head>
 <body>
+<div class="container px-4 py-3"><div class="is-flex is-flex-wrap-wrap is-align-items-center" style="gap: .75rem"><span data-cuenta></span><a data-login href="/login">Iniciar sesión / registrarse</a><a data-admin href="/ver-productos" hidden>Administración</a><a data-admin href="/ver-usuarios" hidden>Usuarios</a><a href="/mis-pedidos">Mis pedidos</a><button data-logout class="button is-small" type="button" hidden>Cerrar sesión</button></div><p id="sesion-status" class="help" role="status"></p></div>
 
   <!-- Contenedor central grande y centrado -->
   <div class="container" style="max-width: 950px; width: 100%;">
@@ -38,10 +39,10 @@
       <!-- Cabecera con fondo amarillo corporativo -->
       <div class="p-5 has-text-centered" style="background-color: #FBC02D;">
         <h1 class="title is-4 has-text-dark m-0" style="font-weight: 700; letter-spacing: 0.05em;">
-          👤 REGISTRO DE USUARIOS EN ARRAYLIST
+          👤 USUARIOS REGISTRADOS
         </h1>
         <p class="subtitle is-7 has-text-dark mt-1 mb-0" style="font-weight: 500; opacity: 0.85;">
-          Segunda Entidad Obligatoria del Backend de Linksport
+          Cuentas y roles del sistema
         </p>
       </div>
 
@@ -56,7 +57,7 @@
                 <th class="has-text-white has-text-centered py-3" style="width: 100px; font-size: 1rem;">ID Usuario</th>
                 <th class="has-text-white py-3" style="font-size: 1rem;">Nombre Completo</th>
                 <th class="has-text-white py-3" style="font-size: 1rem;">Correo Electrónico</th>
-                <th class="has-text-white has-text-centered py-3" style="width: 180px; font-size: 1rem;">Contraseña Credencial</th>
+                <th class="has-text-white has-text-centered py-3" style="width: 180px; font-size: 1rem;">Rol</th>
               </tr>
             </thead>
             <tbody>
@@ -64,7 +65,7 @@
                 <td class="has-text-weight-bold has-text-centered py-3" style="vertical-align: middle; font-size: 1rem;" th:text="${u.id}">1</td>
                 <td class="has-text-weight-semibold py-3" style="vertical-align: middle; color: #363636; font-size: 1rem;" th:text="${u.nombre}">Admin Linksport</td>
                 <td class="py-3" style="vertical-align: middle; font-size: 1rem;" th:text="${u.correo}">admin@linksport.com</td>
-                <td class="has-text-grey has-text-weight-medium has-text-centered py-3" style="vertical-align: middle; font-size: 1rem;" th:text="${u.password}">123456</td>
+                <td class="has-text-grey has-text-weight-medium has-text-centered py-3" style="vertical-align: middle; font-size: 1rem;" th:text="${u.rol}">CLIENTE</td>
               </tr>
             </tbody>
           </table>
@@ -82,6 +83,7 @@
     </div>
   </div>
 
+<script th:src="@{/js/seguridad.js}"></script><script th:src="@{/js/auth-ui.js}"></script>
 </body>
 </html>
 

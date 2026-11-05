@@ -1,0 +1,1 @@
+-- El catálogo de pruebas se crea en cada caso.

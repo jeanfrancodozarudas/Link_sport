@@ -2,91 +2,65 @@ package com.linksport.linksport_backend;
 
 import com.linksport.linksport_backend.model.Producto;
 import com.linksport.linksport_backend.service.ProductoService;
-
-import java.util.List;
-
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PostMapping;
-import jakarta.validation.Valid;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class HomeController {
+    private final ProductoService productos;
+    public HomeController(ProductoService productos) { this.productos = productos; }
 
-    private final ProductoService productoService;
-
-    public HomeController(ProductoService productoService) {
-        this.productoService = productoService;
+    @InitBinder("producto")
+    public void camposProducto(WebDataBinder binder) {
+        binder.setAllowedFields("id", "version", "nombre", "precio", "imagenSrc", "cantidad", "categoria.id", "destacado", "activo");
     }
-
     @GetMapping("/")
-    public String mostrarTienda(Model model) {
-        List<Producto> todos = productoService.obtenerTodos();
-
-        // FILTRO PREMIUM: Jala de forma inteligente los productos marcados como
-        // destacados
-        List<Producto> destacados = todos.stream().filter(Producto::isDestacado).toList();
-
-        // Sigue filtrando las secciones inferiores de manera limpia por su ID
-        // relacional
-        List<Producto> running = todos.stream().filter(p -> p.getCategoria() != null && p.getCategoria().getId() == 1L)
-                .toList();
-        List<Producto> futbol = todos.stream().filter(p -> p.getCategoria() != null && p.getCategoria().getId() == 2L)
-                .toList();
-        List<Producto> accesorios = todos.stream()
-                .filter(p -> p.getCategoria() != null && p.getCategoria().getId() == 3L).toList();
-
-        // Inyectamos las colecciones dinámicas desacopladas hacia Thymeleaf
-        model.addAttribute("productos", destacados);
-        model.addAttribute("productosRunning", running);
-        model.addAttribute("productosFutbol", futbol);
-        model.addAttribute("productosAccesorios", accesorios);
-
+    public String tienda(Model model) {
+        var activos = productos.obtenerTodos().stream().filter(Producto::isActivo).toList();
+        model.addAttribute("productos", activos.stream().filter(Producto::isDestacado).toList());
+        model.addAttribute("productosRunning", activos.stream().filter(p -> categoria(p, "Running")).toList());
+        model.addAttribute("productosFutbol", activos.stream().filter(p -> categoria(p, "Fútbol")).toList());
+        model.addAttribute("productosAccesorios", activos.stream().filter(p -> categoria(p, "Accesorios")).toList());
         return "index";
     }
-
+    private boolean categoria(Producto p, String nombre) {
+        return p.getCategoria() != null && nombre.equalsIgnoreCase(p.getCategoria().getNombre());
+    }
+    private void cargarPanel(Model model) {
+        if (model.getAttribute("producto") instanceof Producto p && p.getCategoria() == null) p.setCategoria(new com.linksport.linksport_backend.model.Categoria());
+        model.addAttribute("productos", productos.obtenerTodos());
+        model.addAttribute("categorias", productos.obtenerCategorias());
+    }
     @GetMapping("/ver-productos")
-    public String verProductosPanel(Model model, @RequestParam(value = "id", required = false) Long id) {
-        if (id != null) {
-            // Si el link trae un ID, cargamos el producto existente en las cajas
-            productoService.buscarPorId(id).ifPresent(p -> model.addAttribute("producto", p));
-        } else {
-            // Si no, cargamos uno en blanco limpio
-            model.addAttribute("producto", new Producto());
-        }
-        model.addAttribute("productos", productoService.obtenerTodos());
+    public String panel(Model model, @RequestParam(required = false) Long id) {
+        model.addAttribute("producto", id == null ? new Producto() : productos.buscarPorId(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "El producto no existe.")));
+        cargarPanel(model);
         return "admin-productos";
     }
-
     @PostMapping("/admin/productos/guardar")
-    public String guardarProductoDesdeWeb(@Valid @ModelAttribute("producto") Producto producto,
-            BindingResult result, Model model) {
-
-        // CORRECCIÓN INTERACTIVA: Comprueba duplicados de nombre SOLO si pertenecen a
-        // la misma categoría
-        if (producto.getId() == null) {
-            boolean duplicadoEnMismaCategoria = productoService.obtenerTodos().stream()
-                    .anyMatch(p -> p.getNombre().equalsIgnoreCase(producto.getNombre())
-                            && p.getCategoria() != null
-                            && producto.getCategoria() != null
-                            && p.getCategoria().getId().equals(producto.getCategoria().getId()));
-
-            if (duplicadoEnMismaCategoria) {
-                result.rejectValue("nombre", "error.producto",
-                        "Ya existe un artículo registrado en esta sección con este nombre.");
+    public String guardar(@Valid @ModelAttribute("producto") Producto producto, BindingResult result,
+            Model model, RedirectAttributes flash) {
+        if (!result.hasErrors()) {
+            try {
+                productos.guardar(producto);
+                flash.addFlashAttribute("exito", "Producto guardado. El catálogo y las existencias fueron actualizados.");
+                return "redirect:/ver-productos";
+            } catch (ResponseStatusException error) {
+                result.reject("producto", error.getReason());
+            } catch (DataIntegrityViolationException error) {
+                result.reject("producto", "No se pudo guardar: revisa si el nombre ya está registrado y recarga el producto.");
             }
         }
-
-        if (result.hasErrors()) {
-            model.addAttribute("productos", productoService.obtenerTodos());
-            return "admin-productos";
-        }
-
-        productoService.guardar(producto);
-        return "redirect:/ver-productos";
+        cargarPanel(model);
+        return "admin-productos";
     }
 }
